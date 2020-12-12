@@ -1,0 +1,46 @@
+version: 2
+jobs:
+  # test:
+  #   docker:
+  #     - image: circleci/node:12.16.2
+
+  #   working_directory: ~/erp-frontend
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys:
+  #           - v1-dependencies-{{ checksum "package.json" }}
+  #           - v1-dependencies-
+
+  #     - run: npm install
+
+  #     - save_cache:
+  #         paths:
+  #           - node_modules
+  #         key: v1-dependencies-{{ checksum "package.json" }}
+  #     - run: npm test
+
+  deploy-to-production:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Deploying to production
+          command: ssh ${user}@${host} "cd erp-frontend; git reset --hard; git pull; npm i; npm run build"
+
+workflows:
+  version: 2
+  deploy-to-vps:
+    jobs:
+      # - test:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - master
+      - deploy-to-production:
+          # requires:
+          #   - test
+          filters:
+            branches:
+              only: master

@@ -13,10 +13,10 @@
                   <v-col cols="12">
                     <v-text-field
                       :disabled="loading"
-                      v-model="username"
+                      v-model="email"
                       type="text"
                       prepend-icon="mdi-account"
-                      label="Имя пользователя"
+                      label="Почта"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
@@ -63,7 +63,7 @@ export default {
   name: "SignIn",
   data() {
     return {
-      username: "",
+      email: "",
       password: "",
       error: {
         isError: false
@@ -77,7 +77,7 @@ export default {
         this.loading = true;
         this.error.isError = false;
         await this.$store.dispatch(USER_LOGIN, {
-          username: this.username,
+          email: this.email,
           password: this.password
         });
       } catch (e) {

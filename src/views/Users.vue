@@ -10,7 +10,7 @@
             <v-spacer />
             <v-col cols="auto">
               <v-dialog persistent v-model="crudDialog" max-width="500">
-                <template v-slot:activator="{on}">
+                <template v-slot:activator="{ on }">
                   <v-btn text v-on="on">Добавить пользователя</v-btn>
                 </template>
                 <v-card>
@@ -22,7 +22,7 @@
                       <v-row>
                         <v-col cols="12">
                           <v-text-field
-                            v-model="editedItem.username"
+                            v-model="editedItem.email"
                             prepend-icon="mdi-account"
                             type="text"
                             label="Имя пользователя"
@@ -46,7 +46,8 @@
                       text
                       color="primary"
                       @click.stop="$refs.form.validate() && save()"
-                    >Сохранить</v-btn>
+                      >Сохранить</v-btn
+                    >
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -58,10 +59,10 @@
           <template v-slot:body>
             <tbody>
               <tr v-for="item in users" :key="item._id">
-                <td>{{item.username}}</td>
+                <td>{{ item.email }}</td>
                 <td></td>
-                <td>{{item.updatedAt | moment('HH:mm DD/MM/YYYY')}}</td>
-                <td>{{item.createdAt | moment('HH:mm DD/MM/YYYY')}}</td>
+                <td>{{ item.updatedAt | moment("HH:mm DD/MM/YYYY") }}</td>
+                <td>{{ item.createdAt | moment("HH:mm DD/MM/YYYY") }}</td>
                 <td class="text-right">
                   <v-btn icon small @click="openCrudDialog(item, 'update')">
                     <v-icon small>mdi-pencil</v-icon>
@@ -84,7 +85,7 @@ import api from "@/plugins/api";
 import {
   CREATE_USER,
   UPDATE_USER,
-  REMOVE_USER
+  REMOVE_USER,
 } from "@/store/auth/action-types";
 export default {
   name: "Users",
@@ -95,40 +96,40 @@ export default {
       crudMode: "create",
       editedItem: {
         _id: "",
-        username: "",
-        password: ""
+        email: "",
+        password: "",
       },
       defaultItem: {
-        username: "",
-        password: ""
+        email: "",
+        password: "",
       },
       headers: [
         {
-          text: "Username",
+          text: "Email",
           align: "start",
-          value: "username"
+          value: "email",
         },
 
         {
           text: "Password",
-          value: "password"
+          value: "password",
         },
         {
           text: "Обновлено",
-          value: "updatedAt"
+          value: "updatedAt",
         },
         {
           text: "Создано",
-          value: "createdAt"
+          value: "createdAt",
         },
-        { text: "Действия", align: "end" }
-      ]
+        { text: "Действия", align: "end" },
+      ],
     };
   },
   computed: {
     users() {
       return this.$store.state.AUTH.users;
-    }
+    },
   },
 
   mounted() {},
@@ -156,8 +157,8 @@ export default {
     },
     async remove(item) {
       this.$store.dispatch(REMOVE_USER, item._id);
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="less" scoped>

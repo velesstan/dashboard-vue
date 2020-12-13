@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "docker:build": "docker build -t velesstan/dashboard . && docker push velesstan/dashboard"
   },
   "dependencies": {
     "@mdi/font": "^5.8.55",

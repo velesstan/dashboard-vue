@@ -70,6 +70,7 @@
                 <tbody>
                   <tr v-for="item in items" :key="item._id">
                     <td>{{item.title}}</td>
+                    <td>{{item.waybillPrefix}}</td>
                     <td>{{item.createdAt | moment('HH:mm DD/MM/YYYY')}}</td>
                     <td>{{item.updatedAt | moment('HH:mm DD/MM/YYYY')}}</td>
                     <td class="text-right">
@@ -120,6 +121,11 @@ export default {
           text: "Название",
           align: "start",
           value: "title"
+        },
+        {
+          text: "Префикс накладной",
+          align: "start",
+          value: "waybillPrefix"
         },
         {
           text: "Создано",

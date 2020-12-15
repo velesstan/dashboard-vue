@@ -66,7 +66,7 @@
                             label="Цена"
                           />
                         </v-col>
-                        <v-col cols="6">
+                        <!-- <v-col cols="6">
                           <v-text-field
                             type="number"
                             v-model="editedItem.discount"
@@ -75,7 +75,7 @@
                             error-count="1"
                             label="Скидка"
                           />
-                        </v-col>
+                        </v-col> -->
                       </v-row>
                     </v-form>
                   </v-container>
@@ -104,7 +104,7 @@
                     <td>{{item.code}}</td>
                     <td>{{item.title}}</td>
                     <td>{{item.price}}</td>
-                    <td>{{item.discount}} %</td>
+                    <!-- <td>{{item.discount}} %</td> -->
                     <td>{{item.createdAt | moment('HH:mm DD/MM/YYYY')}}</td>
                     <td>{{item.updatedAt | moment('HH:mm DD/MM/YYYY')}}</td>
                     <td class="text-right">
@@ -147,14 +147,14 @@ export default {
         title: "",
         category: "",
         price: 0,
-        discount: 0
+        // discount: 0
       },
       defaultItem: {
         code: "",
         title: "",
         category: "",
         price: 0,
-        discount: 0
+        // discount: 0
       },
       headers: [
         {
@@ -178,10 +178,10 @@ export default {
           text: "Цена",
           value: "price"
         },
-        {
-          text: "Скидка",
-          value: "discount"
-        },
+        // {
+        //   text: "Скидка",
+        //   value: "discount"
+        // },
         {
           text: "Создано",
           value: "createdAt"

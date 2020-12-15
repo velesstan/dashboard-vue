@@ -5,7 +5,11 @@
     </v-sheet>
     <v-container fluid>
       <v-card>
-        <v-toolbar elevation="1" :extended="filtersExtended" extension-height="100">
+        <v-toolbar
+          elevation="1"
+          :extended="filtersExtended"
+          extension-height="100"
+        >
           <v-row align="center">
             <v-col>
               <v-text-field
@@ -17,7 +21,9 @@
               />
             </v-col>
             <v-col cols="auto">
-              <v-btn text @click="filtersExtended = !filtersExtended">Фильтры</v-btn>
+              <v-btn text @click="filtersExtended = !filtersExtended"
+                >Фильтры</v-btn
+              >
             </v-col>
           </v-row>
           <template v-if="filtersExtended" v-slot:extension>
@@ -45,8 +51,15 @@
                   </template>
                   <v-date-picker range v-model="dateRange" no-title scrollable>
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="dateRangeMenu = false">Cancel</v-btn>
-                    <v-btn text color="primary" @click="$refs.dateRangeMenu.save(dateRange)">OK</v-btn>
+                    <v-btn text color="primary" @click="dateRangeMenu = false"
+                      >Cancel</v-btn
+                    >
+                    <v-btn
+                      text
+                      color="primary"
+                      @click="$refs.dateRangeMenu.save(dateRange)"
+                      >OK</v-btn
+                    >
                   </v-date-picker>
                 </v-menu>
               </v-col>
@@ -70,12 +83,12 @@
           <template v-slot:body>
             <tbody>
               <tr v-for="item in residues" :key="item.title">
-                <td>{{item.product.title}}</td>
-                <td>{{item.category.title}}</td>
-                <td>{{item.startBalance}} {{item.category.unit}}</td>
-                <td>{{item.income}} {{item.category.unit}}</td>
-                <td>{{item.outcome}} {{item.category.unit}}</td>
-                <td>{{item.endBalance}} {{item.category.unit}}</td>
+                <td>{{ item.product.title }}</td>
+                <td>{{ item.category.title }}</td>
+                <td>{{ item.startBalance }} {{ item.category.unit }}</td>
+                <td>{{ item.income }} {{ item.category.unit }}</td>
+                <td>{{ item.outcome }} {{ item.category.unit }}</td>
+                <td>{{ item.endBalance }} {{ item.category.unit }}</td>
                 <!-- <td>{{item.createdAt | moment('HH:mm DD/MM/YYYY')}}</td>
                 <td>{{item.updatedAt | moment('HH:mm DD/MM/YYYY')}}</td>-->
               </tr>
@@ -104,7 +117,7 @@ export default {
         moment
           .utc()
           .endOf("day")
-          .format("YYYY-MM-DD")
+          .format("YYYY-MM-DD"),
       ],
       stock: "",
       residues: [],
@@ -114,20 +127,20 @@ export default {
         { text: "Остаток на начало", value: "startBalance" },
         { text: "Приход", value: "income" },
         { text: "Расход", value: "outcome" },
-        { text: "Остаток", value: "endBalance" }
-      ]
+        { text: "Остаток", value: "endBalance" },
+      ],
     };
   },
   computed: {
     dateRangeText() {
       const dates = this.dateRange
         .sort()
-        .map(d => moment(d).format("DD/MM/YY"));
+        .map((d) => moment(d).format("DD/MM/YY"));
       return dates.join(" ~ ");
     },
     stocks() {
       return this.$store.state.ERP.stocks.items;
-    }
+    },
   },
   watch: {
     stock(newVal, oldVal) {
@@ -135,20 +148,20 @@ export default {
     },
     dateRange(newVal) {
       if (this.stock) this.fetchResidues();
-    }
+    },
   },
   methods: {
     async fetchResidues() {
       const { data } = await api.get(
-        `/api/erp/residue?stock=${this.stock}&startDate=${
+        `/api/transactions/residue?stock=${this.stock}&start=${
           this.dateRange[0]
-        }&endDate=${this.dateRange[1] || this.dateRange[0]}`
+        }&end=${this.dateRange[1] || this.dateRange[0]}`
       );
       this.residues = data;
       console.log(data);
-    }
+    },
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 <style lang="less" scoped>

@@ -81,12 +81,12 @@
                         <v-form ref="itemsForm" lazy-validation>
                           <v-row>
                             <v-col>
-                              <v-select
+                              <v-autocomplete
                                 :items="products"
                                 return-object
                                 v-model="itemToAdd.product"
                                 :rules="addItemProductRules"
-                                item-text="title"
+                                item-text="code"
                                 item-value="_id"
                                 placeholder="Выбрать"
                               />

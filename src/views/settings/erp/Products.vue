@@ -3,70 +3,86 @@
     <v-row no-gutters>
       <v-col>
         <v-card>
-          <v-toolbar elevation="1">
-            <v-text-field
-              v-model="search"
-              hide-details
-              solo
-              flat
-              prepend-icon="mdi-magnify"
-              label="Поиск"
-            />
-            <v-btn color="primary" @click="openCrudDialog()">Добавить</v-btn>
-            <v-dialog persistent v-model="crudDialog" max-width="500px">
-              <v-card>
-                <v-toolbar dark elevation="0" color="primary">
-                  <span>{{`${crudMode === 'create' ? 'Добавить продукт' : 'Редактировать'}`}}</span>
-                  <v-spacer />
-                  <v-btn icon @click="closeCrudDialog()">
-                    <v-icon>mdi-close</v-icon>
-                  </v-btn>
-                </v-toolbar>
-                <v-card-text>
-                  <v-container>
-                    <v-form ref="form" v-model="formValid" lazy-validation>
-                      <v-row>
-                        <v-col cols="12">
-                          <v-autocomplete
-                            :rules="categoryRules"
-                            :items="categories"
-                            v-model="editedItem.category"
-                            label="Категория"
-                            item-text="title"
-                            return-object
-                          />
-                        </v-col>
-                        <v-col cols="12">
-                          <v-text-field
-                            v-model="editedItem.code"
-                            :rules="codeRules"
-                            :counter="10"
-                            validate-on-blur
-                            error-count="3"
-                            label="Код"
-                          />
-                        </v-col>
-                        <v-col cols="12">
-                          <v-text-field
-                            v-model="editedItem.title"
-                            :rules="nameRules"
-                            :counter="50"
-                            validate-on-blur
-                            error-count="3"
-                            label="Название"
-                          />
-                        </v-col>
-                        <v-col cols="6">
-                          <v-text-field
-                            type="number"
-                            v-model="editedItem.price"
-                            :rules="priceRules"
-                            validate-on-blur
-                            error-count="1"
-                            label="Цена"
-                          />
-                        </v-col>
-                        <!-- <v-col cols="6">
+          <v-toolbar
+            elevation="1"
+            :extended="filtersExtended"
+            extension-height="100"
+          >
+            <v-row align="center">
+              <v-col>
+                <v-text-field
+                  v-model="search"
+                  hide-details
+                  solo
+                  flat
+                  prepend-icon="mdi-magnify"
+                  label="Поиск"
+                />
+              </v-col>
+              <v-col cols="auto">
+                <v-btn color="primary" @click="openCrudDialog()"
+                  >Добавить</v-btn
+                >
+                <v-dialog persistent v-model="crudDialog" max-width="500px">
+                  <v-card>
+                    <v-toolbar dark elevation="0" color="primary">
+                      <span>{{
+                        `${
+                          crudMode === "create"
+                            ? "Добавить продукт"
+                            : "Редактировать"
+                        }`
+                      }}</span>
+                      <v-spacer />
+                      <v-btn icon @click="closeCrudDialog()">
+                        <v-icon>mdi-close</v-icon>
+                      </v-btn>
+                    </v-toolbar>
+                    <v-card-text>
+                      <v-container>
+                        <v-form ref="form" v-model="formValid" lazy-validation>
+                          <v-row>
+                            <v-col cols="12">
+                              <v-autocomplete
+                                :rules="categoryRules"
+                                :items="categories"
+                                v-model="editedItem.category"
+                                label="Категория"
+                                item-text="title"
+                                return-object
+                              />
+                            </v-col>
+                            <v-col cols="12">
+                              <v-text-field
+                                v-model="editedItem.code"
+                                :rules="codeRules"
+                                :counter="10"
+                                validate-on-blur
+                                error-count="3"
+                                label="Код"
+                              />
+                            </v-col>
+                            <v-col cols="12">
+                              <v-text-field
+                                v-model="editedItem.title"
+                                :rules="nameRules"
+                                :counter="50"
+                                validate-on-blur
+                                error-count="3"
+                                label="Название"
+                              />
+                            </v-col>
+                            <v-col cols="6">
+                              <v-text-field
+                                type="number"
+                                v-model="editedItem.price"
+                                :rules="priceRules"
+                                validate-on-blur
+                                error-count="1"
+                                label="Цена"
+                              />
+                            </v-col>
+                            <!-- <v-col cols="6">
                           <v-text-field
                             type="number"
                             v-model="editedItem.discount"
@@ -76,37 +92,66 @@
                             label="Скидка"
                           />
                         </v-col> -->
-                      </v-row>
-                    </v-form>
-                  </v-container>
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer />
-                  <v-btn
-                    @click="$refs.form.validate() && save()"
-                    text
-                    color="green"
-                  >{{`${crudMode === 'create' ? 'Создать': 'Обновить'}`}}</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-            <v-btn icon class="ml-3" @click="refresh">
-              <v-icon>mdi-refresh</v-icon>
-            </v-btn>
+                          </v-row>
+                        </v-form>
+                      </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer />
+                      <v-btn
+                        @click="$refs.form.validate() && save()"
+                        text
+                        color="green"
+                        >{{
+                          `${crudMode === "create" ? "Создать" : "Обновить"}`
+                        }}</v-btn
+                      >
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-col>
+              <v-col cols="auto">
+                <v-btn text @click="filtersExtended = !filtersExtended"
+                  >Фильтры</v-btn
+                >
+              </v-col>
+              <v-col cols="auto">
+                <v-btn icon class="ml-3" @click="refresh">
+                  <v-icon>mdi-refresh</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+            <template v-if="filtersExtended" v-slot:extension>
+              <v-row>
+                <v-col cols="auto">
+                  <v-select
+                    label="Категория"
+                    placeholder="Выбрать"
+                    clearable
+                    hide-details
+                    item-text="title"
+                    item-value="_id"
+                    :items="categories"
+                    v-model="categorySelected"
+                    @change="refresh()"
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </template>
           </v-toolbar>
           <v-card-text>
             <v-data-table :search="search" :headers="headers" :items="items">
-              <template v-slot:body="{items}">
+              <template v-slot:body="{ items }">
                 <tbody>
                   <tr v-for="item in items" :key="item._id">
-                    <td>{{item.category.title}}</td>
-                    <td>{{item.category.unit}}</td>
-                    <td>{{item.code}}</td>
-                    <td>{{item.title}}</td>
-                    <td>{{item.price}}</td>
+                    <td>{{ item.category.title }}</td>
+                    <td>{{ item.category.unit }}</td>
+                    <td>{{ item.code }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.price }}</td>
                     <!-- <td>{{item.discount}} %</td> -->
-                    <td>{{item.createdAt | moment('HH:mm DD/MM/YYYY')}}</td>
-                    <td>{{item.updatedAt | moment('HH:mm DD/MM/YYYY')}}</td>
+                    <td>{{ item.createdAt | moment("HH:mm DD/MM/YYYY") }}</td>
+                    <td>{{ item.updatedAt | moment("HH:mm DD/MM/YYYY") }}</td>
                     <td class="text-right">
                       <v-btn icon small @click="openCrudDialog(item, 'update')">
                         <v-icon small>mdi-pencil</v-icon>
@@ -131,13 +176,15 @@ import {
   GET_PRODUCTS,
   CREATE_PRODUCT,
   UPDATE_PRODUCT,
-  REMOVE_PRODUCT
+  REMOVE_PRODUCT,
 } from "@/store/erp/action-types";
 export default {
   name: "Products",
   data() {
     return {
       search: "",
+      filtersExtended: true,
+      categorySelected: "",
       crudDialog: false,
       formValid: true,
       crudMode: "create",
@@ -160,23 +207,23 @@ export default {
         {
           text: "Категория",
           value: "category.title",
-          align: "start"
+          align: "start",
         },
         {
           text: "СИ",
-          value: "category.unit"
+          value: "category.unit",
         },
         {
           text: "Код",
-          value: "code"
+          value: "code",
         },
         {
           text: "Название",
-          value: "title"
+          value: "title",
         },
         {
           text: "Цена",
-          value: "price"
+          value: "price",
         },
         // {
         //   text: "Скидка",
@@ -184,35 +231,35 @@ export default {
         // },
         {
           text: "Создано",
-          value: "createdAt"
+          value: "createdAt",
         },
         {
           text: "Обновлено",
-          value: "updatedAt"
+          value: "updatedAt",
         },
-        { text: "Действия", align: "end" }
+        { text: "Действия", align: "end" },
       ],
       codeRules: [
-        v => !!v || "Это поле необходимо",
-        v => (v && v.length >= 3) || "Минимум 3 символа",
-        v => (v && v.length <= 10) || "Максимум 10 символов"
+        (v) => !!v || "Это поле необходимо",
+        (v) => (v && v.length >= 3) || "Минимум 3 символа",
+        (v) => (v && v.length <= 10) || "Максимум 10 символов",
       ],
       nameRules: [
-        v => !!v || "Это поле необходимо",
-        v => (v && v.length >= 3) || "Минимум 3 символа",
-        v => (v && v.length <= 50) || "Максимум 10 символов"
+        (v) => !!v || "Это поле необходимо",
+        (v) => (v && v.length >= 3) || "Минимум 3 символа",
+        (v) => (v && v.length <= 50) || "Максимум 10 символов",
       ],
       priceRules: [
-        v =>
+        (v) =>
           /^(([1-9]\d{0,7}(?:\.\d{1,2})?)|(0\.\d{1,2}))$/.test(v) ||
-          "Введите правильное значение"
+          "Введите правильное значение",
       ],
       discountRules: [
-        v =>
+        (v) =>
           /^0(\.\d{1,2})?$|^[1-9][0-9]?(\.\d{1,2})?$|^100$/.test(v) ||
-          "Неверный формат"
+          "Неверный формат",
       ],
-      categoryRules: [v => !!v || "Это поле необходимо"]
+      categoryRules: [(v) => !!v || "Это поле необходимо"],
     };
   },
   computed: {
@@ -221,7 +268,7 @@ export default {
     },
     categories() {
       return this.$store.state.ERP.categories.items;
-    }
+    },
   },
 
   methods: {
@@ -251,8 +298,11 @@ export default {
       this.$store.dispatch(REMOVE_PRODUCT, item._id);
     },
     refresh() {
-      this.$store.dispatch(GET_PRODUCTS);
-    }
-  }
+      console.log("Cat selected: ", this.categorySelected);
+      this.$store.dispatch(GET_PRODUCTS, {
+        category: this.categorySelected || null,
+      });
+    },
+  },
 };
 </script>

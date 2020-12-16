@@ -1,16 +1,25 @@
+import qs from "querystring";
+
 import api from "@/plugins/api";
+
 import * as erpActions from "./action-types";
 import * as erpMutations from "./mutation-types";
 
 export default {
   async [erpActions.ERP_INIT]({ dispatch }) {
-    dispatch(erpActions.GET_PRODUCTS);
+    dispatch(erpActions.GET_PRODUCTS, {});
     dispatch(erpActions.GET_CATEGORIES);
     dispatch(erpActions.GET_STOCKS);
   },
   // Products
-  async [erpActions.GET_PRODUCTS]({ commit }) {
-    const response = await api.get(`/api/products`);
+  async [erpActions.GET_PRODUCTS]({ commit }, { category }) {
+    const queryParams = {};
+    if (category) {
+      queryParams.category = category;
+    }
+    const response = await api.get(
+      `/api/products?${qs.stringify(queryParams)}`
+    );
     commit(erpMutations.PRODUCTS_SET, response.data);
   },
   async [erpActions.CREATE_PRODUCT]({ commit }, product) {

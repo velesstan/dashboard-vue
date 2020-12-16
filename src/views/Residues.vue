@@ -86,8 +86,8 @@
                 <td>{{ item.product.title }}</td>
                 <td>{{ item.category.title }}</td>
                 <td>{{ item.startBalance }} {{ item.category.unit }}</td>
-                <td>{{ item.income }} {{ item.category.unit }}</td>
-                <td>{{ item.outcome }} {{ item.category.unit }}</td>
+                <td>{{ item.totalIncome }} {{ item.category.unit }}</td>
+                <td>{{ item.totalOutcome }} {{ item.category.unit }}</td>
                 <td>{{ item.endBalance }} {{ item.category.unit }}</td>
                 <!-- <td>{{item.createdAt | moment('HH:mm DD/MM/YYYY')}}</td>
                 <td>{{item.updatedAt | moment('HH:mm DD/MM/YYYY')}}</td>-->

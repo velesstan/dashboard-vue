@@ -188,11 +188,14 @@
           <v-row>
             <v-col :key="index" v-for="(item, index) in props.items" cols="12">
               <v-card class="subheading font-weight-bold">
-                <v-card-title>{{
-                  item.type === "OUTCOME"
-                    ? "Расходная накладная " + item.title
-                    : "Приходная накладная " + item.title
-                }}</v-card-title>
+                <v-card-title
+                  >{{ item.stock.title }}
+                  {{
+                    item.type === "OUTCOME"
+                      ? "Расходная накладная " + item.title
+                      : "Приходная накладная " + item.title
+                  }}</v-card-title
+                >
                 <v-divider />
                 <v-simple-table dense>
                   <template v-slot:default>

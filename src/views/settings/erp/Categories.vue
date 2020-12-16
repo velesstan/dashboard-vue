@@ -135,7 +135,7 @@ export default {
         { text: "Действия", align: "end" }
       ],
       units: [
-        { text: "ед" },
+        { text: "шт" },
         { text: "л" },
         { text: "кг" },
         { text: "м" },

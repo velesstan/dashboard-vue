@@ -186,17 +186,16 @@
       <v-data-iterator :items="waybills">
         <template v-slot:default="props">
           <v-row>
-            <v-col
-              :key="item._id.waybill + item._id.type"
-              v-for="item in props.items"
-              cols="12"
-            >
+            <v-col :key="index" v-for="(item, index) in props.items" cols="12">
               <v-card class="subheading font-weight-bold">
-                <v-card-title>{{
-                  item._id.type === "OUTCOME"
-                    ? "Расходная накладная " + item._id.waybill
-                    : "Приходная накладная " + item._id.waybill
-                }}</v-card-title>
+                <v-card-title
+                  >{{ item.stock.title }}
+                  {{
+                    item.type === "OUTCOME"
+                      ? "Расходная накладная " + item.title
+                      : "Приходная накладная " + item.title
+                  }}</v-card-title
+                >
                 <v-divider />
                 <v-simple-table dense>
                   <template v-slot:default>
@@ -210,12 +209,17 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(product, index) in item.items" :key="index">
-                        <td>{{ product.code }}</td>
-                        <td>{{ product.product }}</td>
-                        <td>{{ product.quantity }}</td>
-                        <td>{{ product.price }}</td>
-                        <td>{{ product.price * product.quantity }}</td>
+                      <tr
+                        v-for="(item, index) in item.transactions"
+                        :key="index"
+                      >
+                        <td>{{ item.product.code }}</td>
+                        <td>{{ item.product.title }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.product.price }}</td>
+                        <td>
+                          {{ item.product.price * item.quantity }}
+                        </td>
                       </tr>
                     </tbody>
                   </template>
@@ -291,9 +295,17 @@ export default {
           },
         })),
       };
+      const hasSource = this.waybillTypes.find(
+        (w) => w.value === waybill.action
+      ).source;
+      const hasDestination = this.waybillTypes.find(
+        (w) => w.value === waybill.action
+      ).destination;
+      if (!hasDestination) delete waybill.destination;
+      if (!hasSource) delete waybill.source;
       try {
-        const response = await api.post(`/api/erp/waybill`, waybill);
-        this.closeWaybillDialog();
+        const response = await api.post(`/api/waybills`, waybill);
+        // this.closeWaybillDialog();
       } catch (e) {
         console.error(e);
       }
@@ -342,7 +354,7 @@ export default {
       this.waybill.items.splice(index, 1);
     },
     async fetchWaybills() {
-      const { data } = await api.get(`/api/erp/waybills`);
+      const { data } = await api.get(`/api/waybills`);
       this.waybills = data;
       console.log(data);
     },

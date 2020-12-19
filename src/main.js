@@ -10,8 +10,6 @@ import "roboto-fontface/css/roboto/roboto-fontface.css";
 Vue.config.productionTip = false;
 Vue.use(VueMoment);
 
-console.log("App version: 1.8");
-
 new Vue({
   router,
   store,

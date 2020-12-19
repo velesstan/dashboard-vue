@@ -1,19 +1,20 @@
-import * as authActions from './action-types';
-import * as authMutations from './mutation-types';
+import * as authActions from "./action-types";
+import * as authMutations from "./mutation-types";
 
-import { api, router } from '@/plugins';
-import { setToken, removeToken } from '@/utils/auth';
+import { api, router } from "@/plugins";
+import { setToken, removeToken } from "@/utils/auth";
 
 export default {
   async [authActions.USER_LOGIN]({ commit }, credentials) {
     const response = await api.post(`/api/auth/sign-in`, credentials);
     const token = response.data.access_token;
+    api.defaults.headers.common.Authorization = `Bearer ${token}`;
     setToken(token);
-    router.push('/dashboard');
+    router.push("/dashboard");
   },
   async [authActions.USER_LOGOUT]({ commit }) {
     removeToken();
-    router.push('/sign-in');
+    router.push("/sign-in");
   },
   async [authActions.CREATE_USER]({ commit }, userData) {
     const response = await api.post(`/api/users`, userData);

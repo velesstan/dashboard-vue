@@ -194,8 +194,10 @@
                     item.type === "OUTCOME"
                       ? "Расходная накладная " + item.title
                       : "Приходная накладная " + item.title
-                  }}</v-card-title
-                >
+                  }}
+                  <v-spacer />
+                  <v-btn text @click="print(item._id)">Печать</v-btn>
+                </v-card-title>
                 <v-divider />
                 <v-simple-table dense>
                   <template v-slot:default>
@@ -234,6 +236,7 @@
 </template>
 
 <script>
+import { saveAs } from "file-saver";
 import api from "@/plugins/api";
 import waybillTypes from "./waybilltypes.js";
 export default {
@@ -360,6 +363,12 @@ export default {
     },
     percentage(amount, reduce) {
       return parseFloat(amount - (amount * reduce) / 100);
+    },
+    async print(waybillId) {
+      const { data } = await api.get(`/api/waybills/print/${waybillId}`, {
+        responseType: "arraybuffer",
+      });
+      saveAs(new Blob([data]), "sample.pdf");
     },
   },
 };

@@ -6,7 +6,7 @@
         <span id="brand">VELES ERP</span>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn text>2.6</v-btn>
+      <v-btn text>2.7</v-btn>
       <v-btn text @click.stop="signOut">Выход</v-btn>
     </v-app-bar>
     <v-navigation-drawer app clipped :value="sideNav">

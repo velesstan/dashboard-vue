@@ -1,74 +1,71 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-import { getToken } from '@/utils/auth';
+import { getToken, isAuthenticated } from "@/utils/auth";
 
-import Dashboard from '@/views/Dashboard.vue';
-import Residues from '@/views/Residues.vue';
-import Waybills from '@/views/Waybills.vue';
-import Users from '@/views/Users.vue';
-import SignIn from '@/views/SignIn.vue';
-import NotFound from '@/views/404.vue';
+import Dashboard from "@/views/Dashboard.vue";
+import Residues from "@/views/Residues.vue";
+import Waybills from "@/views/Waybills.vue";
+import Users from "@/views/Users.vue";
+import SignIn from "@/views/SignIn.vue";
+import NotFound from "@/views/404.vue";
 
-import SettingsRoutes from '@/views/settings/routes';
+import SettingsRoutes from "@/views/settings/routes";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
+    path: "/",
     component: null,
     beforeEnter: (to, from, next) => {
-      const token = getToken();
-      if (token) {
-        next('/dashboard');
-      } else next('/sign-in');
+      if (isAuthenticated()) {
+        next("/dashboard");
+      } else next("/sign-in");
     },
   },
   {
-    path: '/dashboard',
-    name: 'Dashboard',
+    path: "/dashboard",
+    name: "Dashboard",
     component: Dashboard,
     children: [
       SettingsRoutes,
       {
-        path: 'residues',
+        path: "residues",
         component: Residues,
       },
       {
-        path: 'waybills',
+        path: "waybills",
         component: Waybills,
       },
       {
-        path: 'users',
+        path: "users",
         component: Users,
       },
     ],
     beforeEnter: (to, from, next) => {
-      const token = getToken();
-      if (!token) {
-        next('/sign-in');
+      if (isAuthenticated()) {
+        next();
+      } else next("/sign-in");
+    },
+  },
+  {
+    path: "/sign-in",
+    component: SignIn,
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next("/dashboard");
       } else next();
     },
   },
   {
-    path: '/sign-in',
-    component: SignIn,
-    beforeEnter: (to, from, next) => {
-      const token = getToken();
-      if (!token) {
-        next();
-      } else next('/dashboard');
-    },
-  },
-  {
-    path: '/404',
-    name: '404',
+    path: "/404",
+    name: "404",
     component: NotFound,
   },
   {
-    path: '*',
-    redirect: '/404',
+    path: "*",
+    redirect: "/404",
   },
 
   //   {
@@ -83,7 +80,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes,
 });

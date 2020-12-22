@@ -6,9 +6,6 @@ export default {
     categories: {
       items: [],
     },
-    products: {
-      items: [],
-    },
     stocks: {
       items: [],
     },

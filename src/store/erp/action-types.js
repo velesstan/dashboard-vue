@@ -1,8 +1,4 @@
 export const ERP_INIT = '[ERP] INIT';
-export const GET_PRODUCTS = '[ERP] PRODUCTS/GET';
-export const CREATE_PRODUCT = '[ERP] PRODUCT/CREATE';
-export const UPDATE_PRODUCT = '[ERP] PRODUCT/UPDATE';
-export const REMOVE_PRODUCT = '[ERP] PRODUCT/REMOVE';
 
 export const GET_CATEGORIES = '[ERP] CATEGORIES/GET';
 export const CREATE_CATEGORY = '[ERP] CATEGORY/CREATE';

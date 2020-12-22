@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import { APP_INIT } from "@/store/app/action-types";
 import { ERP_INIT } from "@/store/erp/action-types";
 import { GET_USERS } from "@/store/auth/action-types";
 import { USER_LOGOUT } from "@/store/auth/action-types";
@@ -85,6 +86,7 @@ export default {
     };
   },
   mounted() {
+    this.$store.dispatch(APP_INIT);
     this.$store.dispatch(ERP_INIT);
     this.$store.dispatch(GET_USERS);
   },

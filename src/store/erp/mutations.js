@@ -1,24 +1,5 @@
-import * as erpMutations from './mutation-types';
+import * as erpMutations from "./mutation-types";
 export default {
-  // Products
-  [erpMutations.PRODUCTS_SET](state, products) {
-    state.products.items = products;
-  },
-  [erpMutations.PRODUCT_CREATED](state, product) {
-    state.products.items.push(product);
-  },
-  [erpMutations.PRODUCT_UPDATED](state, product) {
-    const foundIndex = state.products.items.findIndex(
-      (item) => item._id === product._id
-    );
-    Object.assign(state.products.items[foundIndex], product);
-  },
-  [erpMutations.PRODUCT_REMOVED](state, id) {
-    const foundIndex = state.products.items.findIndex(
-      (item) => item._id === id
-    );
-    state.products.items.splice(foundIndex, 1);
-  },
   // Categories
   [erpMutations.CATEGORIES_SET](state, categories) {
     state.categories.items = categories;

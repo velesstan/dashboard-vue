@@ -283,7 +283,7 @@ export default {
       return this.$store.state.ERP.stocks.items;
     },
     products() {
-      return this.$store.state.ERP.products.items;
+      return this.$store.state.PRODUCTS.products.items;
     },
   },
 

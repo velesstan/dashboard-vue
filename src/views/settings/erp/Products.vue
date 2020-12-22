@@ -173,11 +173,11 @@
 
 <script>
 import {
-  GET_PRODUCTS,
   CREATE_PRODUCT,
+  READ_PRODUCTS,
   UPDATE_PRODUCT,
-  REMOVE_PRODUCT,
-} from "@/store/erp/action-types";
+  DELETE_PRODUCT,
+} from "@/store/products/action-types";
 export default {
   name: "Products",
   data() {
@@ -264,7 +264,7 @@ export default {
   },
   computed: {
     items() {
-      return this.$store.state.ERP.products.items;
+      return this.$store.state.PRODUCTS.products.items;
     },
     categories() {
       return this.$store.state.ERP.categories.items;
@@ -298,8 +298,7 @@ export default {
       this.$store.dispatch(REMOVE_PRODUCT, item._id);
     },
     refresh() {
-      console.log("Cat selected: ", this.categorySelected);
-      this.$store.dispatch(GET_PRODUCTS, {
+      this.$store.dispatch(READ_PRODUCTS, {
         category: this.categorySelected || null,
       });
     },

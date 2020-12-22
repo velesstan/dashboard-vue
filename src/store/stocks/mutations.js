@@ -1,19 +1,19 @@
-import * as erpMutations from "./mutation-types";
-export default {
+import * as stockMutations from "./mutation-types";
 
-  [erpMutations.STOCKS_SET](state, stocks) {
+export default {
+  [stockMutations.READ_STOCKS_SUCCESS](state, stocks) {
     state.stocks.items = stocks;
   },
-  [erpMutations.STOCK_CREATED](state, stock) {
+  [stockMutations.CREATE_STOCK_SUCCESS](state, stock) {
     state.stocks.items.push(stock);
   },
-  [erpMutations.STOCK_UPDATED](state, stock) {
+  [stockMutations.UPDATE_STOCK_SUCCESS](state, stock) {
     const foundIndex = state.stocks.items.findIndex(
       (item) => item._id === stock._id
     );
     Object.assign(state.stocks.items[foundIndex], stock);
   },
-  [erpMutations.STOCK_REMOVED](state, id) {
+  [stockMutations.DELETE_STOCK_SUCCESS](state, id) {
     const foundIndex = state.stocks.items.findIndex((item) => item._id === id);
     state.stocks.items.splice(foundIndex, 1);
   },

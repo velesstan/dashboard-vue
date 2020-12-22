@@ -146,7 +146,7 @@ export default {
       return dates.join(" ~ ");
     },
     stocks() {
-      return this.$store.state.ERP.stocks.items;
+      return this.$store.state.STOCKS.stocks.items;
     },
   },
   watch: {

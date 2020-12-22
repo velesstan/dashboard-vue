@@ -280,7 +280,7 @@ export default {
   },
   computed: {
     stocks() {
-      return this.$store.state.ERP.stocks.items;
+      return this.$store.state.STOCKS.stocks.items;
     },
     products() {
       return this.$store.state.PRODUCTS.products.items;

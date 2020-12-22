@@ -16,7 +16,11 @@
             <v-dialog persistent v-model="crudDialog" max-width="500px">
               <v-card>
                 <v-toolbar dark elevation="0" color="primary">
-                  <span>{{`${crudMode === 'create' ? 'Добавить склад' : 'Редактировать'}`}}</span>
+                  <span>{{
+                    `${
+                      crudMode === "create" ? "Добавить склад" : "Редактировать"
+                    }`
+                  }}</span>
                   <v-spacer />
                   <v-btn icon @click="closeCrudDialog()">
                     <v-icon>mdi-close</v-icon>
@@ -56,7 +60,10 @@
                     @click="$refs.form.validate() && save()"
                     text
                     color="green"
-                  >{{`${crudMode === 'create' ? 'Создать': 'Обновить'}`}}</v-btn>
+                    >{{
+                      `${crudMode === "create" ? "Создать" : "Обновить"}`
+                    }}</v-btn
+                  >
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -66,13 +73,13 @@
           </v-toolbar>
           <v-card-text>
             <v-data-table :search="search" :headers="headers" :items="items">
-              <template v-slot:body="{items}">
+              <template v-slot:body="{ items }">
                 <tbody>
                   <tr v-for="item in items" :key="item._id">
-                    <td>{{item.title}}</td>
-                    <td>{{item.waybillPrefix}}</td>
-                    <td>{{item.createdAt | moment('HH:mm DD/MM/YYYY')}}</td>
-                    <td>{{item.updatedAt | moment('HH:mm DD/MM/YYYY')}}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.waybillPrefix }}</td>
+                    <td>{{ item.createdAt | moment("HH:mm DD/MM/YYYY") }}</td>
+                    <td>{{ item.updatedAt | moment("HH:mm DD/MM/YYYY") }}</td>
                     <td class="text-right">
                       <v-btn icon small @click="openCrudDialog(item, 'update')">
                         <v-icon small>mdi-pencil</v-icon>
@@ -94,11 +101,11 @@
 
 <script>
 import {
-  GET_STOCKS,
   CREATE_STOCK,
+  READ_STOCKS,
   UPDATE_STOCK,
-  REMOVE_STOCK
-} from "@/store/erp/action-types";
+  DELETE_STOCK,
+} from "@/store/stocks/action-types";
 export default {
   name: "Stocks",
   data() {
@@ -110,48 +117,48 @@ export default {
       editedItem: {
         _id: "",
         title: "",
-        waybillPrefix: ""
+        waybillPrefix: "",
       },
       defaultItem: {
         title: "",
-        waybillPrefix: ""
+        waybillPrefix: "",
       },
       headers: [
         {
           text: "Название",
           align: "start",
-          value: "title"
+          value: "title",
         },
         {
           text: "Префикс накладной",
           align: "start",
-          value: "waybillPrefix"
+          value: "waybillPrefix",
         },
         {
           text: "Создано",
-          value: "createdAt"
+          value: "createdAt",
         },
         {
           text: "Обновлено",
-          value: "updatedAt"
+          value: "updatedAt",
         },
-        { text: "Действия", align: "end" }
+        { text: "Действия", align: "end" },
       ],
       waybillPrefixRules: [
-        v => !!v || "Это поле необходимо",
-        v => (v && v.length <= 10) || "Максимум 10 символов"
+        (v) => !!v || "Это поле необходимо",
+        (v) => (v && v.length <= 10) || "Максимум 10 символов",
       ],
       nameRules: [
-        v => !!v || "Это поле необходимо",
-        v => (v && v.length >= 4) || "Минимум 4 символа",
-        v => (v && v.length <= 15) || "Максимум 10 символов"
-      ]
+        (v) => !!v || "Это поле необходимо",
+        (v) => (v && v.length >= 4) || "Минимум 4 символа",
+        (v) => (v && v.length <= 15) || "Максимум 10 символов",
+      ],
     };
   },
   computed: {
     items() {
-      return this.$store.state.ERP.stocks.items;
-    }
+      return this.$store.state.STOCKS.stocks.items;
+    },
   },
 
   methods: {
@@ -177,11 +184,11 @@ export default {
       this.closeCrudDialog();
     },
     async remove(item) {
-      this.$store.dispatch(REMOVE_STOCK, item._id);
+      this.$store.dispatch(DELETE_STOCK, item._id);
     },
     refresh() {
-      this.$store.dispatch(GET_STOCKS);
-    }
-  }
+      this.$store.dispatch(READ_STOCKS);
+    },
+  },
 };
 </script>

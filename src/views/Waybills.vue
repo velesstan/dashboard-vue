@@ -125,8 +125,10 @@
                     <template v-slot:default>
                       <thead>
                         <tr>
+                          <th>№</th>
                           <th class="text-left">Категория</th>
                           <th class="text-left">Артикул</th>
+                          <th class="text-left">Название</th>
                           <th class="text-left">Количество</th>
                           <th class="text-left">Цена</th>
                           <th class="text-left">Скидка</th>
@@ -136,10 +138,12 @@
                       </thead>
                       <tbody>
                         <tr
-                          v-for="item in waybill.items"
+                          v-for="(item, index) in waybill.items"
                           :key="item.product_id"
                         >
+                          <td>{{ index + 1 }}</td>
                           <td>{{ item.category }}</td>
+                          <td>{{ item.code }}</td>
                           <td>{{ item.title }}</td>
                           <td>{{ item.quantity }} {{ item.unit }}</td>
                           <td>{{ item.price }}</td>
@@ -203,6 +207,8 @@
                   <template v-slot:default>
                     <thead>
                       <tr>
+                        <th>№</th>
+                        <th>Категория</th>
                         <th>Артикул</th>
                         <th>Название</th>
                         <th>Количество</th>
@@ -215,6 +221,8 @@
                         v-for="(item, index) in item.transactions"
                         :key="index"
                       >
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ item.product.category.title }}</td>
                         <td>{{ item.product.code }}</td>
                         <td>{{ item.product.title }}</td>
                         <td>{{ item.quantity }}</td>
@@ -340,6 +348,7 @@ export default {
         quantity: Number(this.itemToAdd.quantity),
         product: this.itemToAdd.product._id,
         title: this.itemToAdd.product.title,
+        code: this.itemToAdd.product.code,
         unit: this.itemToAdd.product.category.unit,
         category: this.itemToAdd.product.category.title,
         price: this.itemToAdd.product.price,
@@ -360,9 +369,6 @@ export default {
       const { data } = await api.get(`/api/waybills`);
       this.waybills = data;
       console.log(data);
-    },
-    percentage(amount, reduce) {
-      return parseFloat(amount - (amount * reduce) / 100);
     },
     async print(waybillId) {
       const { data } = await api.get(`/api/waybills/print/${waybillId}`, {

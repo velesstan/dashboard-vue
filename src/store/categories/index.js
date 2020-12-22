@@ -3,9 +3,13 @@ import mutations from "./mutations";
 
 export default {
   state: {
-    stocks: {
+    categories: {
       items: [],
+      // page
+      // totalDocs
+      // e.t.c
     },
+    forms: {},
   },
   actions,
   mutations,

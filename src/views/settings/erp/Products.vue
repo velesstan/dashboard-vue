@@ -267,7 +267,7 @@ export default {
       return this.$store.state.PRODUCTS.products.items;
     },
     categories() {
-      return this.$store.state.ERP.categories.items;
+      return this.$store.state.CATEGORIES.categories.items;
     },
   },
 

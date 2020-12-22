@@ -16,7 +16,13 @@
             <v-dialog persistent v-model="crudDialog" max-width="500px">
               <v-card>
                 <v-toolbar dark elevation="0" color="primary">
-                  <span>{{`${crudMode === 'create' ? 'Добавить категорию' : 'Редактировать'}`}}</span>
+                  <span>{{
+                    `${
+                      crudMode === "create"
+                        ? "Добавить категорию"
+                        : "Редактировать"
+                    }`
+                  }}</span>
                   <v-spacer />
                   <v-btn icon @click="closeCrudDialog()">
                     <v-icon>mdi-close</v-icon>
@@ -54,7 +60,10 @@
                     @click="$refs.form.validate() && save()"
                     text
                     color="green"
-                  >{{`${crudMode === 'create' ? 'Создать': 'Обновить'}`}}</v-btn>
+                    >{{
+                      `${crudMode === "create" ? "Создать" : "Обновить"}`
+                    }}</v-btn
+                  >
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -64,13 +73,13 @@
           </v-toolbar>
           <v-card-text>
             <v-data-table :search="search" :headers="headers" :items="items">
-              <template v-slot:body="{items}">
+              <template v-slot:body="{ items }">
                 <tbody>
                   <tr v-for="item in items" :key="item._id">
-                    <td>{{item.title}}</td>
-                    <td>{{item.unit}}</td>
-                    <td>{{item.createdAt | moment('HH:mm DD/MM/YYYY')}}</td>
-                    <td>{{item.updatedAt | moment('HH:mm DD/MM/YYYY')}}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.unit }}</td>
+                    <td>{{ item.createdAt | moment("HH:mm DD/MM/YYYY") }}</td>
+                    <td>{{ item.updatedAt | moment("HH:mm DD/MM/YYYY") }}</td>
                     <td class="text-right">
                       <v-btn icon small @click="openCrudDialog(item, 'update')">
                         <v-icon small>mdi-pencil</v-icon>
@@ -92,11 +101,11 @@
 
 <script>
 import {
-  GET_CATEGORIES,
   CREATE_CATEGORY,
+  READ_CATEGORIES,
   UPDATE_CATEGORY,
-  REMOVE_CATEGORY
-} from "@/store/erp/action-types";
+  DELETE_CATEGORY,
+} from "@/store/categories/action-types";
 export default {
   name: "Categories",
   data() {
@@ -108,31 +117,31 @@ export default {
       editedItem: {
         _id: "",
         title: "",
-        unit: ""
+        unit: "",
       },
       defaultItem: {
         title: "",
-        unit: ""
+        unit: "",
       },
       headers: [
         {
           text: "Название",
           align: "start",
-          value: "title"
+          value: "title",
         },
         {
           text: "СИ",
-          value: "unit"
+          value: "unit",
         },
         {
           text: "Создано",
-          value: "createdAt"
+          value: "createdAt",
         },
         {
           text: "Обновлено",
-          value: "updatedAt"
+          value: "updatedAt",
         },
-        { text: "Действия", align: "end" }
+        { text: "Действия", align: "end" },
       ],
       units: [
         { text: "шт" },
@@ -140,20 +149,20 @@ export default {
         { text: "кг" },
         { text: "м" },
         { text: "м²" },
-        { text: "м³" }
+        { text: "м³" },
       ],
       categoryRules: [
-        v => !!v || "Это поле необходимо",
-        v => (v && v.length >= 4) || "Минимум 4 символа",
-        v => (v && v.length <= 15) || "Максимум 15 символов"
+        (v) => !!v || "Это поле необходимо",
+        (v) => (v && v.length >= 4) || "Минимум 4 символа",
+        (v) => (v && v.length <= 15) || "Максимум 15 символов",
       ],
-      unitRules: [v => !!v || "Это поле необходимо"]
+      unitRules: [(v) => !!v || "Это поле необходимо"],
     };
   },
   computed: {
     items() {
-      return this.$store.state.ERP.categories.items;
-    }
+      return this.$store.state.CATEGORIES.categories.items;
+    },
   },
   methods: {
     openCrudDialog(item = this.defaultItem, mode = "create") {
@@ -178,11 +187,11 @@ export default {
       this.closeCrudDialog();
     },
     async remove(item) {
-      this.$store.dispatch(REMOVE_CATEGORY, item._id);
+      this.$store.dispatch(DELETE_CATEGORY, item._id);
     },
     refresh() {
-      this.$store.dispatch(GET_CATEGORIES);
-    }
-  }
+      this.$store.dispatch(READ_CATEGORIES, {});
+    },
+  },
 };
 </script>

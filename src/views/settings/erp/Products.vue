@@ -148,7 +148,7 @@
                     <td>{{ item.category.unit }}</td>
                     <td>{{ item.code }}</td>
                     <td>{{ item.title }}</td>
-                    <td>{{ item.price }} л.</td>
+                    <td>{{ item.price.toFixed(2) }} л.</td>
                     <!-- <td>{{item.discount}} %</td> -->
                     <td>{{ item.createdAt | moment("HH:mm DD/MM/YYYY") }}</td>
                     <td>{{ item.updatedAt | moment("HH:mm DD/MM/YYYY") }}</td>

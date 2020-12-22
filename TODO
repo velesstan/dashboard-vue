@@ -1,10 +1,4 @@
 validation rules PRICE
 add search functionality
-
 refresh animation
-
 moment -> to dayjs
-
-waybill ->
-  ID CODE Title quantity price total
-  add .00 to price

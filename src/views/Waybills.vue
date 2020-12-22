@@ -218,9 +218,9 @@
                         <td>{{ item.product.code }}</td>
                         <td>{{ item.product.title }}</td>
                         <td>{{ item.quantity }}</td>
-                        <td>{{ item.product.price }}</td>
+                        <td>{{ item.product.price.toFixed(2) }}</td>
                         <td>
-                          {{ item.product.price * item.quantity }}
+                          {{ (item.product.price * item.quantity).toFixed(2) }}
                         </td>
                       </tr>
                     </tbody>

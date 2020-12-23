@@ -84,7 +84,6 @@
                             </v-col>
                             <v-col cols="6">
                               <v-text-field
-                                
                                 v-model="editedItem.price_wholesale"
                                 :rules="price_wholesaleRules"
                                 validate-on-blur
@@ -302,7 +301,7 @@ export default {
       this.closeCrudDialog();
     },
     async remove(item) {
-      this.$store.dispatch(REMOVE_PRODUCT, item._id);
+      this.$store.dispatch(DELETE_PRODUCT, item._id);
     },
     refresh() {
       this.$store.dispatch(READ_PRODUCTS, {

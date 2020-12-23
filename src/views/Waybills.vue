@@ -191,7 +191,7 @@
         <template v-slot:default="props">
           <v-row>
             <v-col :key="index" v-for="(item, index) in props.items" cols="12">
-              <v-card class="subheading font-weight-bold">
+              <v-card>
                 <v-card-title
                   >{{ item.stock.title }}
                   {{
@@ -225,10 +225,16 @@
                         <td>{{ item.product.category.title }}</td>
                         <td>{{ item.product.code }}</td>
                         <td>{{ item.product.title }}</td>
-                        <td>{{ item.quantity }}</td>
+                        <td>
+                          {{ item.quantity }} {{ item.product.category.unit }}
+                        </td>
                         <td>{{ item.product.price_retail.toFixed(2) }}</td>
                         <td>
-                          {{ (item.product.price_retail * item.quantity).toFixed(2) }}
+                          {{
+                            (item.product.price_retail * item.quantity).toFixed(
+                              2
+                            )
+                          }}
                         </td>
                       </tr>
                     </tbody>

@@ -82,16 +82,16 @@
                                 label="Цена розн."
                               />
                             </v-col>
-                            <!-- <v-col cols="6">
-                          <v-text-field
-                            type="number"
-                            v-model="editedItem.discount"
-                            :rules="discountRules"
-                            validate-on-blur
-                            error-count="1"
-                            label="Скидка"
-                          />
-                        </v-col> -->
+                            <v-col cols="6">
+                              <v-text-field
+                                
+                                v-model="editedItem.price_wholesale"
+                                :rules="price_wholesaleRules"
+                                validate-on-blur
+                                error-count="1"
+                                label="Цена отп."
+                              />
+                            </v-col>
                           </v-row>
                         </v-form>
                       </v-container>
@@ -154,8 +154,7 @@
                     <td>{{ item.code }}</td>
                     <td>{{ item.title }}</td>
                     <td>{{ item.price_retail.toFixed(2) }} л.</td>
-                    <td></td>
-                    <!-- <td>{{ item.price_wholesale.toFixed(2) }} л.</td> -->
+                    <td>{{ item.price_wholesale.toFixed(2) }} л.</td>
                     <!-- <td>{{item.discount}} %</td> -->
                     <td>{{ item.createdAt | moment("HH:mm DD/MM/YYYY") }}</td>
                     <td>{{ item.updatedAt | moment("HH:mm DD/MM/YYYY") }}</td>
@@ -201,14 +200,14 @@ export default {
         title: "",
         category: "",
         price_retail: 0,
-        // discount: 0
+        price_wholesale: 0,
       },
       defaultItem: {
         code: "",
         title: "",
         category: "",
         price_retail: 0,
-        // discount: 0
+        price_wholesale: 0,
       },
       headers: [
         {
@@ -236,10 +235,6 @@ export default {
           text: "Цена отп.",
           value: "price_wholesale",
         },
-        // {
-        //   text: "Скидка",
-        //   value: "discount"
-        // },
         {
           text: "Создано",
           value: "createdAt",
@@ -265,10 +260,8 @@ export default {
           /^(([1-9]\d{0,7}(?:\.\d{1,2})?)|(0\.\d{1,2}))$/.test(v) ||
           "Введите правильное значение",
       ],
-      discountRules: [
-        (v) =>
-          /^0(\.\d{1,2})?$|^[1-9][0-9]?(\.\d{1,2})?$|^100$/.test(v) ||
-          "Неверный формат",
+      price_wholesaleRules: [
+        (v) => (v && !!v) || "Введите правильное значение",
       ],
       categoryRules: [(v) => !!v || "Это поле необходимо"],
     };

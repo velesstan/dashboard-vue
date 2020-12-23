@@ -84,6 +84,7 @@
                             </v-col>
                             <v-col cols="6">
                               <v-text-field
+                                type="number"
                                 v-model="editedItem.price_wholesale"
                                 :rules="price_wholesaleRules"
                                 validate-on-blur

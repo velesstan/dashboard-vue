@@ -6,6 +6,7 @@ import * as productMutations from "./mutation-types";
 
 export default {
   async [productActions.READ_PRODUCTS]({ commit }, { category }) {
+    commit(productMutations.READ_PRODUCTS_REQUEST);
     const queryParams = {};
     if (category) {
       queryParams.category = category;

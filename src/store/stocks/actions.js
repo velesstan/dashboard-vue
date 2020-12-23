@@ -5,6 +5,7 @@ import * as stockMutations from "./mutation-types";
 
 export default {
   async [stockActions.READ_STOCKS]({ commit }) {
+    commit(stockMutations.READ_STOCKS_REQUEST);
     const response = await api.get(`/api/stocks`);
     commit(stockMutations.READ_STOCKS_SUCCESS, response.data);
   },

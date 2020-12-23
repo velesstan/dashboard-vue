@@ -72,7 +72,12 @@
             </v-btn>
           </v-toolbar>
           <v-card-text>
-            <v-data-table :search="search" :headers="headers" :items="items">
+            <v-data-table
+              :loading="tableLoading"
+              :search="search"
+              :headers="headers"
+              :items="items"
+            >
               <template v-slot:body="{ items }">
                 <tbody>
                   <tr v-for="item in items" :key="item._id">
@@ -158,6 +163,9 @@ export default {
   computed: {
     items() {
       return this.$store.state.STOCKS.stocks.items;
+    },
+    tableLoading() {
+      return this.$store.state.STOCKS.stocks.table.loading;
     },
   },
 

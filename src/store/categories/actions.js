@@ -6,6 +6,7 @@ import * as categoryMutations from "./mutation-types";
 
 export default {
   async [categoryActions.READ_CATEGORIES]({ commit }, { category }) {
+    commit(categoryMutations.CREATE_CATEGORY_REQUEST);
     const queryParams = {};
     if (category) {
       queryParams.category = category;

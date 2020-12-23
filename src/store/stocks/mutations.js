@@ -1,7 +1,11 @@
 import * as stockMutations from "./mutation-types";
 
 export default {
+  [stockMutations.READ_STOCKS_REQUEST](state) {
+    state.stocks.table.loading = true;
+  },
   [stockMutations.READ_STOCKS_SUCCESS](state, stocks) {
+    state.stocks.table.loading = false;
     state.stocks.items = stocks;
   },
   [stockMutations.CREATE_STOCK_SUCCESS](state, stock) {

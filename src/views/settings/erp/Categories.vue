@@ -72,7 +72,12 @@
             </v-btn>
           </v-toolbar>
           <v-card-text>
-            <v-data-table :search="search" :headers="headers" :items="items">
+            <v-data-table
+              :loading="tableLoading"
+              :search="search"
+              :headers="headers"
+              :items="items"
+            >
               <template v-slot:body="{ items }">
                 <tbody>
                   <tr v-for="item in items" :key="item._id">
@@ -141,7 +146,7 @@ export default {
           text: "Обновлено",
           value: "updatedAt",
         },
-        { text: "Действия", align: "end" },
+        { text: "Действия", align: "end", sortable: false },
       ],
       units: [
         { text: "шт" },
@@ -162,6 +167,9 @@ export default {
   computed: {
     items() {
       return this.$store.state.CATEGORIES.categories.items;
+    },
+    tableLoading() {
+      return this.$store.state.CATEGORIES.categories.table.loading;
     },
   },
   methods: {

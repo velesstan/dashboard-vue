@@ -1,7 +1,11 @@
 import * as productMutations from "./mutation-types";
 
 export default {
+  [productMutations.READ_PRODUCTS_REQUEST](state) {
+    state.products.table.loading = true;
+  },
   [productMutations.READ_PRODUCTS_SUCCESS](state, products) {
+    state.products.table.loading = false;
     state.products.items = products;
   },
   [productMutations.CREATE_PRODUCT_SUCCESS](state, product) {

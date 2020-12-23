@@ -5,6 +5,9 @@ export default {
   state: {
     categories: {
       items: [],
+      table: {
+        loading: false,
+      },
       // page
       // totalDocs
       // e.t.c

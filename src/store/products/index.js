@@ -5,6 +5,9 @@ export default {
   state: {
     products: {
       items: [],
+      table: {
+        loading: false,
+      },
       // page
       // totalDocs
       // e.t.c

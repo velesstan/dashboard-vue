@@ -146,16 +146,16 @@
                           <td>{{ item.code }}</td>
                           <td>{{ item.title }}</td>
                           <td>{{ item.quantity }} {{ item.unit }}</td>
-                          <td>{{ item.price }}</td>
+                          <td>{{ item.price_retail }}</td>
                           <td>{{ `${item.reduce ? item.discount : 0}%` }}</td>
                           <td>
                             {{
                               item.reduce
                                 ? percentage(
-                                    item.quantity * item.price,
+                                    item.quantity * item.price_retail,
                                     item.discount
                                   )
-                                : item.quantity * item.price
+                                : item.quantity * item.price_retail
                             }}
                           </td>
                           <td class="text-right">
@@ -212,7 +212,7 @@
                         <th>Артикул</th>
                         <th>Название</th>
                         <th>Количество</th>
-                        <th>Цена</th>
+                        <th>Цена розн.</th>
                         <th>Всего</th>
                       </tr>
                     </thead>
@@ -226,9 +226,9 @@
                         <td>{{ item.product.code }}</td>
                         <td>{{ item.product.title }}</td>
                         <td>{{ item.quantity }}</td>
-                        <td>{{ item.product.price.toFixed(2) }}</td>
+                        <td>{{ item.product.price_retail.toFixed(2) }}</td>
                         <td>
-                          {{ (item.product.price * item.quantity).toFixed(2) }}
+                          {{ (item.product.price_retail * item.quantity).toFixed(2) }}
                         </td>
                       </tr>
                     </tbody>
@@ -300,7 +300,7 @@ export default {
           product: i.product,
           quantity: i.quantity,
           snapshot: {
-            price: i.price,
+            price_retail: i.price_retail,
             reduce: i.reduce,
             discount: i.discount,
           },
@@ -351,7 +351,7 @@ export default {
         code: this.itemToAdd.product.code,
         unit: this.itemToAdd.product.category.unit,
         category: this.itemToAdd.product.category.title,
-        price: this.itemToAdd.product.price,
+        price_retail: this.itemToAdd.product.price_retail,
       };
       this.waybill.items.push(item);
       this.itemToAdd = {

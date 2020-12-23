@@ -75,11 +75,11 @@
                             <v-col cols="6">
                               <v-text-field
                                 type="number"
-                                v-model="editedItem.price"
-                                :rules="priceRules"
+                                v-model="editedItem.price_retail"
+                                :rules="price_retailRules"
                                 validate-on-blur
                                 error-count="1"
-                                label="Цена"
+                                label="Цена розн."
                               />
                             </v-col>
                             <!-- <v-col cols="6">
@@ -153,7 +153,9 @@
                     <td>{{ item.category.unit }}</td>
                     <td>{{ item.code }}</td>
                     <td>{{ item.title }}</td>
-                    <td>{{ item.price.toFixed(2) }} л.</td>
+                    <td>{{ item.price_retail.toFixed(2) }} л.</td>
+                    <td></td>
+                    <!-- <td>{{ item.price_wholesale.toFixed(2) }} л.</td> -->
                     <!-- <td>{{item.discount}} %</td> -->
                     <td>{{ item.createdAt | moment("HH:mm DD/MM/YYYY") }}</td>
                     <td>{{ item.updatedAt | moment("HH:mm DD/MM/YYYY") }}</td>
@@ -198,14 +200,14 @@ export default {
         code: "",
         title: "",
         category: "",
-        price: 0,
+        price_retail: 0,
         // discount: 0
       },
       defaultItem: {
         code: "",
         title: "",
         category: "",
-        price: 0,
+        price_retail: 0,
         // discount: 0
       },
       headers: [
@@ -227,8 +229,12 @@ export default {
           value: "title",
         },
         {
-          text: "Цена",
-          value: "price",
+          text: "Цена розн.",
+          value: "price_retail",
+        },
+        {
+          text: "Цена отп.",
+          value: "price_wholesale",
         },
         // {
         //   text: "Скидка",
@@ -254,7 +260,7 @@ export default {
         (v) => (v && v.length >= 3) || "Минимум 3 символа",
         (v) => (v && v.length <= 50) || "Максимум 10 символов",
       ],
-      priceRules: [
+      price_retailRules: [
         (v) =>
           /^(([1-9]\d{0,7}(?:\.\d{1,2})?)|(0\.\d{1,2}))$/.test(v) ||
           "Введите правильное значение",

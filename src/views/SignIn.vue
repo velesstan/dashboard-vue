@@ -29,7 +29,14 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
-                    <v-alert v-if="error.isError" dark dense transition color="red">Неверные данные</v-alert>
+                    <v-alert
+                      v-if="error.isError"
+                      dark
+                      dense
+                      transition
+                      color="red"
+                      >Неверные данные</v-alert
+                    >
                   </v-col>
                   <v-col cols="12">
                     <v-row>
@@ -43,7 +50,8 @@
                           tile
                           color="primary"
                           @click="signIn"
-                        >Войти</v-btn>
+                          >Войти</v-btn
+                        >
                       </v-col>
                     </v-row>
                   </v-col>
@@ -66,9 +74,9 @@ export default {
       email: "",
       password: "",
       error: {
-        isError: false
+        isError: false,
       },
-      loading: false
+      loading: false,
     };
   },
   methods: {
@@ -78,15 +86,15 @@ export default {
         this.error.isError = false;
         await this.$store.dispatch(USER_LOGIN, {
           email: this.email,
-          password: this.password
+          password: this.password,
         });
       } catch (e) {
         this.error.isError = true;
         this.password = "";
         this.loading = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="less" scoped>

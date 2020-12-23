@@ -16,7 +16,6 @@ import SnackbarQueue from "@/components/SnackbarQueue";
 import { APP_INIT } from "@/store/app/action-types";
 import { NOTIFY_DISMISS } from "@/store/app/mutation-types";
 import { GET_USERS } from "@/store/auth/action-types";
-import { USER_LOGOUT } from "@/store/auth/action-types";
 export default {
   name: "Dashboard",
   components: {
@@ -37,11 +36,6 @@ export default {
   mounted() {
     this.$store.dispatch(APP_INIT);
     this.$store.dispatch(GET_USERS);
-  },
-  methods: {
-    signOut() {
-      this.$store.dispatch(USER_LOGOUT);
-    },
   },
 };
 </script>

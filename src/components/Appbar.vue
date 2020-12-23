@@ -5,14 +5,20 @@
       <span id="brand">VELES ERP</span>
     </v-toolbar-title>
     <v-spacer />
-    <v-btn text>4.3</v-btn>
+    <v-btn text>4.4</v-btn>
     <v-btn text @click.stop="signOut">Выход</v-btn>
   </v-app-bar>
 </template>
 
 <script>
+import { USER_LOGOUT } from "@/store/auth/action-types";
 export default {
   name: "Appbar",
+  methods: {
+    signOut() {
+      this.$store.dispatch(USER_LOGOUT);
+    },
+  },
 };
 </script>
 

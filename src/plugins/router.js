@@ -1,9 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import { getToken, isAuthenticated } from "@/utils/auth";
+import { isAuthenticated } from "@/utils/auth";
 
-import Dashboard from "@/views/Dashboard.vue";
+import Dashboard from "@/layouts/Dashboard.vue";
 import Residues from "@/views/Residues.vue";
 import Waybills from "@/views/Waybills.vue";
 import Users from "@/views/Users.vue";

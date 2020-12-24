@@ -380,7 +380,7 @@ export default {
       const { data } = await api.get(`/api/waybills/print/${waybillId}`, {
         responseType: "arraybuffer",
       });
-      saveAs(new Blob([data]), "sample.pdf");
+      saveAs(new Blob([data]), "Накладная.pdf");
     },
   },
 };

@@ -70,6 +70,9 @@
             <v-btn icon class="ml-3" @click="refresh">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
+            <v-btn icon class="ml-3" @click="exportCategories()">
+              <v-icon>mdi-download</v-icon>
+            </v-btn>
           </v-toolbar>
           <v-card-text>
             <v-data-table
@@ -105,6 +108,7 @@
 </template>
 
 <script>
+import api from "@/plugins/api";
 import {
   CREATE_CATEGORY,
   READ_CATEGORIES,
@@ -184,6 +188,12 @@ export default {
     closeCrudDialog() {
       this.crudDialog = false;
       this.editedItem = Object.assign({}, this.defaultItem);
+    },
+    async exportCategories() {
+      const { data } = await api.get(`/api/export/categories/`, {
+        responseType: "arraybuffer",
+      });
+      saveAs(new Blob([data]), "Продукция.xlsx");
     },
     async save() {
       if (this.crudMode === "create") {

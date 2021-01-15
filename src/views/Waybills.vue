@@ -149,14 +149,7 @@
                           <td>{{ item.price_retail }}</td>
                           <td>{{ `${item.reduce ? item.discount : 0}%` }}</td>
                           <td>
-                            {{
-                              item.reduce
-                                ? percentage(
-                                    item.quantity * item.price_retail,
-                                    item.discount
-                                  )
-                                : item.quantity * item.price_retail
-                            }}
+                           
                           </td>
                           <td class="text-right">
                             <v-btn

@@ -23,7 +23,7 @@
                 <v-btn color="primary" @click="openCrudDialog()"
                   >Добавить</v-btn
                 >
-                <v-dialog persistent v-model="crudDialog" max-width="500px">
+                <v-dialog persistent v-model="crudDialog" max-width="800px">
                   <v-card>
                     <v-toolbar dark elevation="0" color="primary">
                       <span>{{
@@ -42,55 +42,176 @@
                       <v-container>
                         <v-form ref="form" v-model="formValid" lazy-validation>
                           <v-row>
-                            <v-col cols="12">
-                              <v-autocomplete
-                                :rules="categoryRules"
-                                :items="categories"
-                                v-model="editedItem.category"
-                                label="Категория"
-                                item-text="title"
-                                return-object
-                              />
+                            <v-col :cols="showProductRequires ? 6 : 12">
+                              <h3 class="heading">Продукт</h3>
+                              <v-row
+                                ><v-col cols="6">
+                                  <v-autocomplete
+                                    :rules="categoryRules"
+                                    :items="categories"
+                                    v-model="editedItem.category"
+                                    label="Категория"
+                                    item-text="title"
+                                    return-object
+                                  />
+                                </v-col>
+                                <v-col cols="6">
+                                  <v-text-field
+                                    v-model="editedItem.code"
+                                    :rules="codeRules"
+                                    :counter="10"
+                                    validate-on-blur
+                                    error-count="3"
+                                    label="Код"
+                                  />
+                                </v-col>
+                                <v-col cols="6">
+                                  <v-text-field
+                                    v-model="editedItem.title"
+                                    :rules="nameRules"
+                                    :counter="50"
+                                    validate-on-blur
+                                    error-count="3"
+                                    label="Название"
+                                  />
+                                </v-col>
+                                <v-col cols="3">
+                                  <v-text-field
+                                    type="number"
+                                    v-model="editedItem.price_retail"
+                                    :rules="price_retailRules"
+                                    validate-on-blur
+                                    error-count="1"
+                                    label="Цена розн."
+                                  />
+                                </v-col>
+                                <v-col cols="3">
+                                  <v-text-field
+                                    type="number"
+                                    v-model="editedItem.price_wholesale"
+                                    :rules="price_wholesaleRules"
+                                    validate-on-blur
+                                    error-count="1"
+                                    label="Цена отп."
+                                  />
+                                </v-col>
+                                <v-col cols="12">
+                                  <v-switch
+                                    label="Показать требуемое сырье"
+                                    v-model="showProductRequires"
+                                  />
+                                </v-col>
+                              </v-row>
                             </v-col>
-                            <v-col cols="12">
-                              <v-text-field
-                                v-model="editedItem.code"
-                                :rules="codeRules"
-                                :counter="10"
-                                validate-on-blur
-                                error-count="3"
-                                label="Код"
-                              />
-                            </v-col>
-                            <v-col cols="12">
-                              <v-text-field
-                                v-model="editedItem.title"
-                                :rules="nameRules"
-                                :counter="50"
-                                validate-on-blur
-                                error-count="3"
-                                label="Название"
-                              />
-                            </v-col>
-                            <v-col cols="6">
-                              <v-text-field
-                                type="number"
-                                v-model="editedItem.price_retail"
-                                :rules="price_retailRules"
-                                validate-on-blur
-                                error-count="1"
-                                label="Цена розн."
-                              />
-                            </v-col>
-                            <v-col cols="6">
-                              <v-text-field
-                                type="number"
-                                v-model="editedItem.price_wholesale"
-                                :rules="price_wholesaleRules"
-                                validate-on-blur
-                                error-count="1"
-                                label="Цена отп."
-                              />
+                            <v-col v-if="showProductRequires" cols="6">
+                              <h3 class="heading">Сырье</h3>
+                              <v-row>
+                                <v-col cols="12">
+                                  <v-simple-table>
+                                    <template v-slot:default>
+                                      <thead>
+                                        <tr>
+                                          <th>№</th>
+                                          <th>Код</th>
+                                          <th>Количество</th>
+                                          <th></th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr
+                                          v-for="(item,
+                                          index) in editedItem.requires"
+                                          :key="index"
+                                        >
+                                          <td>{{ index + 1 }}</td>
+                                          <td>
+                                            {{ item.product.code || item.code }}
+                                          </td>
+                                          <td>{{ item.quantity }}</td>
+                                          <td>
+                                            <v-btn
+                                              icon
+                                              small
+                                              @click="removeRequiredItem(index)"
+                                            >
+                                              <v-icon small>mdi-delete</v-icon>
+                                            </v-btn>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </template>
+                                  </v-simple-table>
+                                </v-col>
+                                <v-dialog
+                                  persistent
+                                  v-model="add_items_dialog"
+                                  max-width="500"
+                                >
+                                  <template v-slot:activator="{ on }">
+                                    <v-btn
+                                      color="green"
+                                      v-on="on"
+                                      small
+                                      dark
+                                      depressed
+                                      tile
+                                      >Добавить позиции</v-btn
+                                    >
+                                  </template>
+                                  <v-card>
+                                    <v-toolbar dark color="primary"
+                                      >Добавить позицию</v-toolbar
+                                    >
+                                    <v-card-text>
+                                      <v-form ref="itemsForm" lazy-validation>
+                                        <v-row>
+                                          <v-col>
+                                            <v-autocomplete
+                                              :items="items"
+                                              return-object
+                                              v-model="itemToAdd.product"
+                                              :rules="addItemProductRules"
+                                              item-text="code"
+                                              item-value="_id"
+                                              placeholder="Выбрать"
+                                            />
+                                          </v-col>
+                                          <v-col cols="auto">
+                                            <v-text-field
+                                              type="number"
+                                              v-model="itemToAdd.quantity"
+                                              :rules="addItemQuantityRules"
+                                              label="Количество"
+                                            />
+                                          </v-col>
+                                          <v-col cols="12">
+                                            <v-checkbox
+                                              v-model="itemToAdd.reduce"
+                                              label="Скидка"
+                                            />
+                                          </v-col>
+                                        </v-row>
+                                      </v-form>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                      <v-spacer />
+                                      <v-btn
+                                        text
+                                        @click.stop="closeAddItemsDialog()"
+                                        >Отмена</v-btn
+                                      >
+                                      <v-btn
+                                        text
+                                        @click.stop="
+                                          $refs.itemsForm.validate() &&
+                                            addItem()
+                                        "
+                                        >Добавить</v-btn
+                                      >
+                                    </v-card-actions>
+                                  </v-card>
+                                </v-dialog>
+                              </v-row>
                             </v-col>
                           </v-row>
                         </v-form>
@@ -189,11 +310,13 @@ export default {
   data() {
     return {
       search: "",
+      showProductRequires: false,
       filtersExtended: true,
       categorySelected: "",
       crudDialog: false,
       formValid: true,
       crudMode: "create",
+      add_items_dialog: false,
       editedItem: {
         _id: "",
         code: "",
@@ -201,6 +324,7 @@ export default {
         category: "",
         price_retail: 0,
         price_wholesale: 0,
+        requires: [],
       },
       defaultItem: {
         code: "",
@@ -208,6 +332,7 @@ export default {
         category: "",
         price_retail: 0,
         price_wholesale: 0,
+        requires: [],
       },
       headers: [
         {
@@ -264,6 +389,16 @@ export default {
         (v) => (v && !!v) || "Введите правильное значение",
       ],
       categoryRules: [(v) => !!v || "Это поле необходимо"],
+      addItemProductRules: [(v) => !!v._id || "Выберите продукт"],
+      addItemQuantityRules: [
+        (v) => !!v || "Укажите количество",
+        (v) => v >= 0 || "Количество должно быть положительным",
+      ],
+      itemToAdd: {
+        product: {},
+        quantity: 0,
+        reduce: false,
+      },
     };
   },
   computed: {
@@ -279,6 +414,9 @@ export default {
   },
 
   methods: {
+    removeRequiredItem(index) {
+      this.editedItem.requires.splice(index, 1);
+    },
     openCrudDialog(item = this.defaultItem, mode = "create") {
       this.crudMode = mode;
       this.editedItem = Object.assign({}, item);
@@ -303,6 +441,25 @@ export default {
     },
     async remove(item) {
       this.$store.dispatch(DELETE_PRODUCT, item._id);
+    },
+    addItem() {
+      const item = {
+        product: this.itemToAdd.product._id,
+        quantity: Number(this.itemToAdd.quantity),
+        title: this.itemToAdd.product.title,
+        code: this.itemToAdd.product.code,
+        unit: this.itemToAdd.product.category.unit,
+        category: this.itemToAdd.product.category.title,
+      };
+      this.editedItem.requires.push(item);
+      this.itemToAdd = {
+        product: {},
+        quantity: 0,
+      };
+      this.closeAddItemsDialog();
+    },
+    closeAddItemsDialog() {
+      this.add_items_dialog = false;
     },
     refresh() {
       this.$store.dispatch(READ_PRODUCTS, {

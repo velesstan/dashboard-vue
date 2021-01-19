@@ -101,6 +101,7 @@
                             </v-col>
                             <v-col cols="12">
                               <v-checkbox
+                                v-if="waybillAction.value === 'SELL'"
                                 v-model="itemToAdd.reduce"
                                 label="Скидка"
                               />
@@ -146,9 +147,28 @@
                           <td>{{ item.code }}</td>
                           <td>{{ item.title }}</td>
                           <td>{{ item.quantity }} {{ item.unit }}</td>
-                          <td>{{ item.price_retail }}</td>
-                          <td>{{ `${item.reduce ? item.discount : 0}%` }}</td>
-                          <td></td>
+                          <td>
+                            {{ item.price_retail.toFixed(2) }}
+                          </td>
+                          <td>
+                            {{
+                              `${(item.reduce &&
+                                Number(
+                                  (item.price_retail - item.price_wholesale) *
+                                    item.quantity
+                                ).toFixed(2)) ||
+                                0} л.`
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              `${Number(
+                                (item.quantity * item.reduce
+                                  ? item.price_wholesale
+                                  : item.price_retail) * item.quantity
+                              ).toFixed(2)} л.`
+                            }}
+                          </td>
                           <td class="text-right">
                             <v-btn
                               icon
@@ -350,6 +370,7 @@ export default {
         code: this.itemToAdd.product.code,
         unit: this.itemToAdd.product.category.unit,
         category: this.itemToAdd.product.category.title,
+        price_wholesale: this.itemToAdd.product.price_wholesale,
         price_retail: this.itemToAdd.product.price_retail,
       };
       this.waybill.items.push(item);

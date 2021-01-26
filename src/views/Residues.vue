@@ -88,14 +88,13 @@
           <template v-slot:body>
             <tbody>
               <tr v-for="item in residues" :key="item.title">
+                <td>{{ item.product.code }}</td>
                 <td>{{ item.product.title }}</td>
                 <td>{{ item.category.title }}</td>
                 <td>{{ item.startBalance }} {{ item.category.unit }}</td>
                 <td>{{ item.totalIncome }} {{ item.category.unit }}</td>
                 <td>{{ item.totalOutcome }} {{ item.category.unit }}</td>
                 <td>{{ item.endBalance }} {{ item.category.unit }}</td>
-                <!-- <td>{{item.createdAt | moment('HH:mm DD/MM/YYYY')}}</td>
-                <td>{{item.updatedAt | moment('HH:mm DD/MM/YYYY')}}</td>-->
               </tr>
             </tbody>
           </template>
@@ -129,7 +128,8 @@ export default {
       stock: "",
       residues: [],
       headers: [
-        { text: "Артикул", value: "title" },
+        { text: "Код", value: "code" },
+        { text: "Название", value: "title" },
         { text: "Категория", value: "category.title" },
         { text: "Остаток на начало", value: "startBalance" },
         { text: "Приход", value: "income" },

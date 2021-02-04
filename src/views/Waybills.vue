@@ -152,12 +152,14 @@
                           </td>
                           <td>
                             {{
-                              `${(item.reduce &&
-                                Number(
-                                  (item.price_retail - item.price_wholesale) *
-                                    item.quantity
-                                ).toFixed(2)) ||
-                                0} л.`
+                              `${
+                                (item.reduce &&
+                                  Number(
+                                    (item.price_retail - item.price_wholesale) *
+                                      item.quantity
+                                  ).toFixed(2)) ||
+                                0
+                              } л.`
                             }}
                           </td>
                           <td>
@@ -211,6 +213,8 @@
                       : "Приходная накладная " + item.title
                   }}
                   <v-spacer />
+                  <v-btn v-if="item.active" text @click="disableWaybill(item._id)">Удалить</v-btn>
+                  <v-btn v-if="!item.active" text @click="enableWaybill(item._id)">Восстановить</v-btn>
                   <v-btn text @click="print(item._id)">Печать</v-btn>
                 </v-card-title>
                 <v-divider />
@@ -389,6 +393,12 @@ export default {
       const { data } = await api.get(`/api/waybills`);
       this.waybills = data;
       console.log(data);
+    },
+    async disableWaybill(id) {
+      await api.post(`/api/waybills/${id}/disable`)
+    },
+    async enableWaybill(id) {
+      await api.post(`/api/waybills/${id}/enable`)
     },
     async print(waybillId) {
       const { data } = await api.get(`/api/waybills/print/${waybillId}`, {

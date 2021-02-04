@@ -45,7 +45,7 @@
                             <v-col :cols="showProductRequires ? 6 : 12">
                               <h3 class="heading">Продукт</h3>
                               <v-row
-                                ><v-col cols="6">
+                                ><v-col cols="4">
                                   <v-autocomplete
                                     :rules="categoryRules"
                                     :items="categories"
@@ -55,7 +55,7 @@
                                     return-object
                                   />
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="4">
                                   <v-text-field
                                     v-model="editedItem.code"
                                     :rules="codeRules"
@@ -63,6 +63,14 @@
                                     validate-on-blur
                                     error-count="3"
                                     label="Код"
+                                  />
+                                </v-col>
+                                <v-col cols="4">
+                                   <v-select
+                                    v-model="editedItem.unit"
+                                    :items="units"
+                                    :rules="unitRules"
+                                    label="Единица измерения"
                                   />
                                 </v-col>
                                 <v-col cols="6">
@@ -271,7 +279,7 @@
                 <tbody>
                   <tr v-for="item in items" :key="item._id">
                     <td>{{ item.category.title }}</td>
-                    <td>{{ item.category.unit }}</td>
+                    <td>{{ item.unit }}</td>
                     <td>{{ item.code }}</td>
                     <td>{{ item.title }}</td>
                     <td>{{ item.price_retail.toFixed(2) }} л.</td>
@@ -322,6 +330,7 @@ export default {
         code: "",
         title: "",
         category: "",
+        unit: "",
         price_retail: 0,
         price_wholesale: 0,
         requires: [],
@@ -330,6 +339,7 @@ export default {
         code: "",
         title: "",
         category: "",
+        unit: "",
         price_retail: 0,
         price_wholesale: 0,
         requires: [],
@@ -342,7 +352,7 @@ export default {
         },
         {
           text: "СИ",
-          value: "category.unit",
+          value: "unit",
         },
         {
           text: "Код",
@@ -370,6 +380,14 @@ export default {
         },
         { text: "Действия", align: "end" },
       ],
+      units: [
+        { text: "шт" },
+        { text: "л" },
+        { text: "кг" },
+        { text: "м" },
+        { text: "м²" },
+        { text: "м³" },
+      ],
       codeRules: [
         (v) => !!v || "Это поле необходимо",
         (v) => (v && v.length >= 3) || "Минимум 3 символа",
@@ -389,6 +407,7 @@ export default {
         (v) => (v && !!v) || "Введите правильное значение",
       ],
       categoryRules: [(v) => !!v || "Это поле необходимо"],
+      unitRules: [(v) => !!v || "Выберите единицу изм."],
       addItemProductRules: [(v) => !!v._id || "Выберите продукт"],
       addItemQuantityRules: [
         (v) => !!v || "Укажите количество",
@@ -448,7 +467,7 @@ export default {
         quantity: Number(this.itemToAdd.quantity),
         title: this.itemToAdd.product.title,
         code: this.itemToAdd.product.code,
-        unit: this.itemToAdd.product.category.unit,
+        unit: this.itemToAdd.product.unit,
         category: this.itemToAdd.product.category.title,
       };
       this.editedItem.requires.push(item);

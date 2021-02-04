@@ -132,7 +132,6 @@
                           <th class="text-left">Название</th>
                           <th class="text-left">Количество</th>
                           <th class="text-left">Цена</th>
-                          <th class="text-left">Скидка</th>
                           <th class="text-left">Итого</th>
                           <th class="text-right">Удалить</th>
                         </tr>
@@ -148,18 +147,10 @@
                           <td>{{ item.title }}</td>
                           <td>{{ item.quantity }} {{ item.unit }}</td>
                           <td>
-                            {{ item.price_retail.toFixed(2) }}
-                          </td>
-                          <td>
                             {{
-                              `${
-                                (item.reduce &&
-                                  Number(
-                                    (item.price_retail - item.price_wholesale) *
-                                      item.quantity
-                                  ).toFixed(2)) ||
-                                0
-                              } л.`
+                              item.reduce
+                                ? item.price_wholesale.toFixed(2)
+                                : item.price_retail.toFixed(2)
                             }}
                           </td>
                           <td>
@@ -213,8 +204,18 @@
                       : "Приходная накладная " + item.title
                   }}
                   <v-spacer />
-                  <v-btn v-if="item.active" text @click="disableWaybill(item._id)">Удалить</v-btn>
-                  <v-btn v-if="!item.active" text @click="enableWaybill(item._id)">Восстановить</v-btn>
+                  <v-btn
+                    v-if="item.active"
+                    text
+                    @click="disableWaybill(item._id)"
+                    >Удалить</v-btn
+                  >
+                  <v-btn
+                    v-if="!item.active"
+                    text
+                    @click="enableWaybill(item._id)"
+                    >Восстановить</v-btn
+                  >
                   <v-btn text @click="print(item._id)">Печать</v-btn>
                 </v-card-title>
                 <v-divider />
@@ -227,7 +228,7 @@
                         <th>Артикул</th>
                         <th>Название</th>
                         <th>Количество</th>
-                        <th>Цена розн.</th>
+                        <th>Цена</th>
                         <th>Всего</th>
                       </tr>
                     </thead>
@@ -242,9 +243,17 @@
                         <td>{{ item.product.title }}</td>
                         <td>
                           {{ Math.abs(item.quantity) }}
-                          {{ item.product.category.unit }}
+                          {{ item.product.unit }}
                         </td>
-                        <td>{{ item.product.price_retail.toFixed(2) }}</td>
+                        <td>
+                          {{
+                            item.snapshot
+                              ? `${item.snapshot.price.toFixed(2)} ${
+                                  item.snapshot.reduce ? "опт." : "розн."
+                                }`
+                              : `${item.product.price_retail.toFixed(2)} розн.`
+                          }}
+                        </td>
                         <td>
                           {{
                             (
@@ -323,7 +332,7 @@ export default {
           product: i.product,
           quantity: i.quantity,
           snapshot: {
-            price_retail: i.price_retail,
+            price: i.reduce ? i.price_wholesale : i.price_retail,
             reduce: i.reduce,
             discount: i.discount,
           },
@@ -395,10 +404,10 @@ export default {
       console.log(data);
     },
     async disableWaybill(id) {
-      await api.post(`/api/waybills/${id}/disable`)
+      await api.post(`/api/waybills/${id}/disable`);
     },
     async enableWaybill(id) {
-      await api.post(`/api/waybills/${id}/enable`)
+      await api.post(`/api/waybills/${id}/enable`);
     },
     async print(waybillId) {
       const { data } = await api.get(`/api/waybills/print/${waybillId}`, {

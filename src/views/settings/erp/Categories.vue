@@ -42,6 +42,13 @@
                             label="Название категории"
                           />
                         </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                            type="number"
+                            v-model="editedItem.sortPriority"
+                            label="Приоритет"
+                          />
+                        </v-col>
                       </v-row>
                     </v-form>
                   </v-container>
@@ -77,6 +84,7 @@
                 <tbody>
                   <tr v-for="item in items" :key="item._id">
                     <td>{{ item.title }}</td>
+                    <td>{{ item.sortPriority }}</td>
                     <td>{{ item.createdAt | moment("HH:mm DD/MM/YYYY") }}</td>
                     <td>{{ item.updatedAt | moment("HH:mm DD/MM/YYYY") }}</td>
                     <td class="text-right">
@@ -117,15 +125,22 @@ export default {
       editedItem: {
         _id: "",
         title: "",
+        sortPriority: "",
       },
       defaultItem: {
         title: "",
+        sortPriority: "1000",
       },
       headers: [
         {
           text: "Название",
           align: "start",
           value: "title",
+        },
+        {
+          text: "Приоритет",
+          align: "start",
+          value: "sortPriority",
         },
         {
           text: "Создано",

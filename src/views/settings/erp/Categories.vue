@@ -42,14 +42,6 @@
                             label="Название категории"
                           />
                         </v-col>
-                        <v-col cols="12">
-                          <v-select
-                            v-model="editedItem.unit"
-                            :items="units"
-                            :rules="unitRules"
-                            label="Единица измерения"
-                          />
-                        </v-col>
                       </v-row>
                     </v-form>
                   </v-container>
@@ -85,7 +77,6 @@
                 <tbody>
                   <tr v-for="item in items" :key="item._id">
                     <td>{{ item.title }}</td>
-                    <td>{{ item.unit }}</td>
                     <td>{{ item.createdAt | moment("HH:mm DD/MM/YYYY") }}</td>
                     <td>{{ item.updatedAt | moment("HH:mm DD/MM/YYYY") }}</td>
                     <td class="text-right">
@@ -126,21 +117,15 @@ export default {
       editedItem: {
         _id: "",
         title: "",
-        unit: "",
       },
       defaultItem: {
         title: "",
-        unit: "",
       },
       headers: [
         {
           text: "Название",
           align: "start",
           value: "title",
-        },
-        {
-          text: "СИ",
-          value: "unit",
         },
         {
           text: "Создано",
@@ -152,20 +137,11 @@ export default {
         },
         { text: "Действия", align: "end", sortable: false },
       ],
-      units: [
-        { text: "шт" },
-        { text: "л" },
-        { text: "кг" },
-        { text: "м" },
-        { text: "м²" },
-        { text: "м³" },
-      ],
       categoryRules: [
         (v) => !!v || "Это поле необходимо",
         (v) => (v && v.length >= 4) || "Минимум 4 символа",
         (v) => (v && v.length <= 15) || "Максимум 15 символов",
       ],
-      unitRules: [(v) => !!v || "Это поле необходимо"],
     };
   },
   computed: {

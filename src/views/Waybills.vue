@@ -208,6 +208,12 @@
                     v-if="item.active"
                     text
                     @click="disableWaybill(item._id)"
+                    >Отменить</v-btn
+                  >
+                  <v-btn
+                    v-if="!item.active"
+                    text
+                    @click="deleteWaybill(item._id)"
                     >Удалить</v-btn
                   >
                   <v-btn
@@ -408,6 +414,9 @@ export default {
     },
     async enableWaybill(id) {
       await api.post(`/api/waybills/${id}/enable`);
+    },
+    async deleteWaybill(id) {
+      await api.delete(`/api/waybills/${id}`);
     },
     async print(waybillId) {
       const { data } = await api.get(`/api/waybills/print/${waybillId}`, {

@@ -348,7 +348,7 @@ export default {
       if (!hasSource) delete waybill.source;
       try {
         const response = await api.post(`/api/waybills`, waybill);
-        // this.closeWaybillDialog();
+        this.closeWaybillDialog();
       } catch (e) {
         console.error(e);
       }

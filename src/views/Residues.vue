@@ -91,10 +91,38 @@
                 <td>{{ item.product.code }}</td>
                 <td>{{ item.product.title }}</td>
                 <td>{{ item.category.title }}</td>
-                <td>{{ item.startBalance }} {{ item.category.unit }}</td>
-                <td>{{ item.totalIncome }} {{ item.category.unit }}</td>
-                <td>{{ item.totalOutcome }} {{ item.category.unit }}</td>
-                <td>{{ item.endBalance }} {{ item.category.unit }}</td>
+                <td>
+                  {{
+                    Number.isInteger(item.startBalance)
+                      ? item.startBalance
+                      : item.startBalance.toFixed(2)
+                  }}
+                  {{ item.category.unit }}
+                </td>
+                <td>
+                  {{
+                    Number.isInteger(item.totalIncome)
+                      ? item.totalIncome
+                      : item.totalIncome.toFixed(2)
+                  }}
+                  {{ item.category.unit }}
+                </td>
+                <td>
+                  {{
+                    Number.isInteger(item.totalOutcome)
+                      ? item.totalOutcome
+                      : item.totalOutcome.toFixed(2)
+                  }}
+                  {{ item.category.unit }}
+                </td>
+                <td>
+                  {{
+                    Number.isInteger(item.endBalance)
+                      ? item.endBalance
+                      : item.endBalance.toFixed(2)
+                  }}
+                  {{ item.category.unit }}
+                </td>
               </tr>
             </tbody>
           </template>
@@ -116,14 +144,8 @@ export default {
       dateRangeMenu: false,
       searchTerm: "",
       dateRange: [
-        moment
-          .utc()
-          .subtract("1", "month")
-          .format("YYYY-MM-DD"),
-        moment
-          .utc()
-          .endOf("day")
-          .format("YYYY-MM-DD"),
+        moment.utc().subtract("1", "month").format("YYYY-MM-DD"),
+        moment.utc().endOf("day").format("YYYY-MM-DD"),
       ],
       stock: "",
       residues: [],

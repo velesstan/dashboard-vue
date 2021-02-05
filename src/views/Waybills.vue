@@ -263,13 +263,42 @@
                         <td>
                           {{
                             (
-                              item.product.price_retail *
-                              Math.abs(item.quantity)
+                              Math.abs(item.quantity) *
+                              (item.snapshot
+                                ? item.snapshot.price
+                                : item.product.price_retail)
                             ).toFixed(2)
                           }}
+                          л.
                         </td>
                       </tr>
                     </tbody>
+                    <tfoot>
+                      <tr>
+                        <td
+                          colspan="6"
+                          class="text-right text-uppercase font-weight-bold"
+                        >
+                          Итого
+                        </td>
+                        <td>
+                          {{
+                            item.transactions
+                              .reduce(
+                                (acc, t) =>
+                                  (acc +=
+                                    Math.abs(t.quantity) *
+                                    (t.snapshot
+                                      ? t.snapshot.price
+                                      : t.product.price_retail)),
+                                0
+                              )
+                              .toFixed(2)
+                          }}
+                          л.
+                        </td>
+                      </tr>
+                    </tfoot>
                   </template>
                 </v-simple-table>
               </v-card>

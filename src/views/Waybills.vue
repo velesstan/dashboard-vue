@@ -200,8 +200,8 @@
                   >{{ item.stock.title }}
                   {{
                     item.type === "OUTCOME"
-                      ? "Расходная накладная " + item.title
-                      : "Приходная накладная " + item.title
+                      ? "Расходная накладная " + item.serialNumber
+                      : "Приходная накладная " + item.serialNumber
                   }}
                   <v-spacer />
                   <v-btn

@@ -197,8 +197,8 @@
                   >{{ item.stock.title }}
                   {{
                     item.type === "OUTCOME"
-                      ? "Расходная накладная " + item.serialNumber
-                      : "Приходная накладная " + item.serialNumber
+                      ? "Расходная накладная №" + zeroPad(item.serialNumber, 6)
+                      : "Приходная накладная №" + zeroPad(item.serialNumber, 6)
                   }}
                   <v-spacer />
                   <v-btn
@@ -376,6 +376,9 @@ export default {
       });
   },
   methods: {
+    zeroPad(num, places) {
+      return String(num).padStart(places, "0");
+    },
     async makeWaybill() {
       const waybill = {
         action: this.waybill.action,

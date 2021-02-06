@@ -13,6 +13,7 @@
               hide-details
               flat
               solo
+              @keyup="findBySerialNumber($event)"
             />
           </v-col>
           <v-col cols="auto">
@@ -311,13 +312,18 @@
 </template>
 
 <script>
+import { BehaviorSubject } from "rxjs";
+import { switchMap } from "rxjs/operators";
+import { ajax } from "rxjs/ajax";
 import { saveAs } from "file-saver";
-import api from "@/plugins/api";
+import qs from "querystring";
+import api, { API_URL } from "@/plugins/api";
 import waybillTypes from "./waybilltypes.js";
 export default {
   name: "Waybills",
   data() {
     return {
+      searchTerm$: new BehaviorSubject(""),
       // WAYBILLS MOVE TO STORE
       waybills: [],
       //
@@ -353,9 +359,25 @@ export default {
       return this.$store.state.PRODUCTS.products.items;
     },
   },
-
+  beforeDestroy() {
+    this.searchTerm$.unsubscribe();
+  },
   mounted() {
-    this.fetchWaybills();
+    // this.fetchWaybills();
+    this.searchTerm$
+      .pipe(
+        switchMap((serialNumber) => {
+          if (serialNumber) {
+            const query = qs.stringify({
+              serialNumber,
+            });
+            return ajax.getJSON(`${API_URL}/api/waybills?${query}`);
+          } else return ajax.getJSON(`${API_URL}/api/waybills`);
+        })
+      )
+      .subscribe((response) => {
+        this.waybills = response;
+      });
   },
   methods: {
     async makeWaybill() {
@@ -437,6 +459,9 @@ export default {
       const { data } = await api.get(`/api/waybills`);
       this.waybills = data;
       console.log(data);
+    },
+    async findBySerialNumber(e) {
+      this.searchTerm$.next(e.target.value);
     },
     async disableWaybill(id) {
       await api.post(`/api/waybills/${id}/disable`);

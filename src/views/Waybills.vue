@@ -164,11 +164,7 @@
                             }}
                           </td>
                           <td class="text-right">
-                            <v-btn
-                              icon
-                              small
-                              @click="removeItem(item.product_id)"
-                            >
+                            <v-btn icon small @click="removeItem(item.product)">
                               <v-icon small>mdi-delete</v-icon>
                             </v-btn>
                           </td>
@@ -192,7 +188,7 @@
           </v-col>
         </v-row>
       </v-toolbar>
-      <v-data-iterator :items="waybills">
+      <v-data-iterator style="margin-top: 24px" :items="waybills">
         <template v-slot:default="props">
           <v-row>
             <v-col :key="index" v-for="(item, index) in props.items" cols="12">
@@ -452,7 +448,7 @@ export default {
       this.closeAddItemsDialog();
     },
     removeItem(id) {
-      const index = this.waybill.items.findIndex((i) => i.product_id === id);
+      const index = this.waybill.items.findIndex((i) => i.product === id);
       this.waybill.items.splice(index, 1);
     },
     async fetchWaybills() {

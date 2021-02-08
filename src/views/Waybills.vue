@@ -263,6 +263,11 @@
                     <v-chip>
                       {{ item.type === "OUTCOME" ? "Расход" : "Приход" }}
                     </v-chip>
+                    <v-chip>
+                      {{
+                        waybillTypes.find((t) => t.value == [item.action]).title
+                      }}
+                    </v-chip>
                     <v-chip> №{{ zeroPad(item.serialNumber, 6) }} </v-chip>
                   </v-chip-group>
                   <v-spacer />

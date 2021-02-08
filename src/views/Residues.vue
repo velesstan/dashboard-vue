@@ -97,7 +97,7 @@
                       ? item.startBalance
                       : item.startBalance.toFixed(2)
                   }}
-                  {{ item.unit }}
+                  {{ item.product.unit }}
                 </td>
                 <td>
                   {{
@@ -105,7 +105,7 @@
                       ? item.totalIncome
                       : item.totalIncome.toFixed(2)
                   }}
-                  {{ item.unit }}
+                  {{ item.product.unit }}
                 </td>
                 <td>
                   {{
@@ -113,7 +113,7 @@
                       ? item.totalOutcome
                       : item.totalOutcome.toFixed(2)
                   }}
-                  {{ item.unit }}
+                  {{ item.product.unit }}
                 </td>
                 <td>
                   {{
@@ -121,7 +121,7 @@
                       ? item.endBalance
                       : item.endBalance.toFixed(2)
                   }}
-                  {{ item.unit }}
+                  {{ item.product.unit }}
                 </td>
               </tr>
             </tbody>

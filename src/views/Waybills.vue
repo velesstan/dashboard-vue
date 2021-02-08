@@ -255,7 +255,7 @@
                 <v-card-title>
                   <v-chip-group>
                     <v-chip>
-                      {{ item.date | moment("HH:mm DD/MM/YY") }}
+                      {{ item.createdAt | moment("HH:mm DD/MM/YY") }}
                     </v-chip>
                     <v-chip>
                       {{ item.stock.title }}

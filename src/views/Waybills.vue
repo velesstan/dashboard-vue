@@ -10,6 +10,7 @@
             <v-text-field
               prepend-icon="mdi-magnify"
               label="Поиск по номеру накладной"
+              v-model="searchTermText"
               hide-details
               flat
               solo
@@ -313,6 +314,7 @@ import { switchMap } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { saveAs } from "file-saver";
 import qs from "querystring";
+import { READ_WAYBILLS_SUCCESS } from "@/store/waybills/mutation-types";
 import api, { API_URL } from "@/plugins/api";
 import waybillTypes from "./waybilltypes.js";
 export default {
@@ -320,9 +322,7 @@ export default {
   data() {
     return {
       searchTerm$: new BehaviorSubject(""),
-      // WAYBILLS MOVE TO STORE
-      waybills: [],
-      //
+      searchTermText: "",
       add_items_dialog: false,
       add_waybill_dialog: false,
       waybillTypes: waybillTypes,
@@ -354,12 +354,14 @@ export default {
     products() {
       return this.$store.state.PRODUCTS.products.items;
     },
+    waybills() {
+      return this.$store.state.WAYBILLS.waybills.items;
+    },
   },
   beforeDestroy() {
     this.searchTerm$.unsubscribe();
   },
   mounted() {
-    // this.fetchWaybills();
     this.searchTerm$
       .pipe(
         switchMap((serialNumber) => {
@@ -372,7 +374,7 @@ export default {
         })
       )
       .subscribe((response) => {
-        this.waybills = response;
+        this.$store.commit(READ_WAYBILLS_SUCCESS, response);
       });
   },
   methods: {
@@ -405,6 +407,8 @@ export default {
       try {
         const response = await api.post(`/api/waybills`, waybill);
         this.closeWaybillDialog();
+        this.searchTermText = "";
+        this.searchTerm$.next("");
       } catch (e) {
         console.error(e);
       }
@@ -453,11 +457,6 @@ export default {
     removeItem(id) {
       const index = this.waybill.items.findIndex((i) => i.product === id);
       this.waybill.items.splice(index, 1);
-    },
-    async fetchWaybills() {
-      const { data } = await api.get(`/api/waybills`);
-      this.waybills = data;
-      console.log(data);
     },
     async findBySerialNumber(e) {
       this.searchTerm$.next(e.target.value);

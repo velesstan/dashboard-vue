@@ -4,7 +4,65 @@
       <h2 class="display-1 font-weight-light">Накладные</h2>
     </v-sheet>
     <v-container fluid>
-      <v-toolbar elevation="1">
+      <v-toolbar
+        elevation="1"
+        :extended="filtersExtended"
+        extension-height="100"
+      >
+        <template v-if="filtersExtended" v-slot:extension>
+          <v-row>
+            <v-col cols="auto">
+              <v-menu
+                ref="dateRangeMenu"
+                v-model="dateRangeMenu"
+                :close-on-content-click="false"
+                :return-value.sync="dateRange"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-text-field
+                    label="Выбрать дату"
+                    hide-details
+                    outlined
+                    v-model="dateRangeText"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker range v-model="dateRange" no-title scrollable>
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="dateRangeMenu = false"
+                    >Cancel</v-btn
+                  >
+                  <v-btn
+                    text
+                    color="primary"
+                    @click="
+                      fetchWaybills() && $refs.dateRangeMenu.save(dateRange)
+                    "
+                    >OK</v-btn
+                  >
+                </v-date-picker>
+              </v-menu>
+            </v-col>
+            <v-col cols="auto">
+              <v-select
+                label="Выбрать склад"
+                hide-details
+                outlined
+                item-text="title"
+                item-value="_id"
+                :items="stocks"
+                v-model="stock"
+                @change="fetchWaybills()"
+                prepend-icon="mdi-home-search"
+              ></v-select>
+            </v-col>
+          </v-row>
+        </template>
         <v-row align="center">
           <v-col>
             <v-text-field
@@ -194,13 +252,19 @@
           <v-row>
             <v-col :key="index" v-for="(item, index) in props.items" cols="12">
               <v-card>
-                <v-card-title
-                  >{{ item.stock.title }}
-                  {{
-                    item.type === "OUTCOME"
-                      ? "Расходная накладная №" + zeroPad(item.serialNumber, 6)
-                      : "Приходная накладная №" + zeroPad(item.serialNumber, 6)
-                  }}
+                <v-card-title>
+                  <v-chip-group>
+                    <v-chip>
+                      {{ item.date | moment("HH:mm DD/MM/YY") }}
+                    </v-chip>
+                    <v-chip>
+                      {{ item.stock.title }}
+                    </v-chip>
+                    <v-chip>
+                      {{ item.type === "OUTCOME" ? "Расход" : "Приход" }}
+                    </v-chip>
+                    <v-chip> №{{ zeroPad(item.serialNumber, 6) }} </v-chip>
+                  </v-chip-group>
                   <v-spacer />
                   <v-btn
                     v-if="item.active"
@@ -312,8 +376,10 @@
 import { BehaviorSubject } from "rxjs";
 import { switchMap } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
+import moment from "moment";
 import { saveAs } from "file-saver";
 import qs from "querystring";
+import { READ_WAYBILLS } from "@/store/waybills/action-types";
 import { READ_WAYBILLS_SUCCESS } from "@/store/waybills/mutation-types";
 import api, { API_URL } from "@/plugins/api";
 import waybillTypes from "./waybilltypes.js";
@@ -327,6 +393,13 @@ export default {
       add_waybill_dialog: false,
       waybillTypes: waybillTypes,
       waybillAction: {},
+      filtersExtended: true,
+      dateRangeMenu: false,
+      stock: "",
+      dateRange: [
+        moment.utc().subtract("1", "month").format("YYYY-MM-DD"),
+        moment.utc().endOf("day").format("YYYY-MM-DD"),
+      ],
       waybill: {
         action: "",
         source: "",
@@ -357,6 +430,12 @@ export default {
     waybills() {
       return this.$store.state.WAYBILLS.waybills.items;
     },
+    dateRangeText() {
+      const dates = this.dateRange
+        .sort()
+        .map((d) => moment(d).format("DD/MM/YY"));
+      return dates.join(" ~ ");
+    },
   },
   beforeDestroy() {
     this.searchTerm$.unsubscribe();
@@ -380,6 +459,12 @@ export default {
   methods: {
     zeroPad(num, places) {
       return String(num).padStart(places, "0");
+    },
+    async fetchWaybills() {
+      this.$store.dispatch(READ_WAYBILLS, {
+        stock: this.stock,
+        dateRange: this.dateRange,
+      });
     },
     async makeWaybill() {
       const waybill = {

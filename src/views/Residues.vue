@@ -14,6 +14,8 @@
             <v-col>
               <v-text-field
                 prepend-icon="mdi-magnify"
+                v-model="searchTerm"
+                @keyup="fetchResidues()"
                 label="Поиск по модели"
                 hide-details
                 flat
@@ -57,7 +59,9 @@
                     <v-btn
                       text
                       color="primary"
-                      @click="$refs.dateRangeMenu.save(dateRange)"
+                      @click="
+                        fetchResidues() && $refs.dateRangeMenu.save(dateRange)
+                      "
                       >OK</v-btn
                     >
                   </v-date-picker>
@@ -72,6 +76,7 @@
                   item-value="_id"
                   :items="stocks"
                   v-model="stock"
+                  @change="fetchResidues()"
                   prepend-icon="mdi-home-search"
                 ></v-select>
               </v-col>
@@ -83,14 +88,41 @@
           <template v-slot:body>
             <tbody>
               <tr v-for="item in residues" :key="item.title">
+                <td>{{ item.product.code }}</td>
                 <td>{{ item.product.title }}</td>
                 <td>{{ item.category.title }}</td>
-                <td>{{ item.startBalance }} {{ item.category.unit }}</td>
-                <td>{{ item.totalIncome }} {{ item.category.unit }}</td>
-                <td>{{ item.totalOutcome }} {{ item.category.unit }}</td>
-                <td>{{ item.endBalance }} {{ item.category.unit }}</td>
-                <!-- <td>{{item.createdAt | moment('HH:mm DD/MM/YYYY')}}</td>
-                <td>{{item.updatedAt | moment('HH:mm DD/MM/YYYY')}}</td>-->
+                <td>
+                  {{
+                    Number.isInteger(item.startBalance)
+                      ? item.startBalance
+                      : item.startBalance.toFixed(2)
+                  }}
+                  {{ item.product.unit }}
+                </td>
+                <td>
+                  {{
+                    Number.isInteger(item.totalIncome)
+                      ? item.totalIncome
+                      : item.totalIncome.toFixed(2)
+                  }}
+                  {{ item.product.unit }}
+                </td>
+                <td>
+                  {{
+                    Number.isInteger(item.totalOutcome)
+                      ? item.totalOutcome
+                      : item.totalOutcome.toFixed(2)
+                  }}
+                  {{ item.product.unit }}
+                </td>
+                <td>
+                  {{
+                    Number.isInteger(item.endBalance)
+                      ? item.endBalance
+                      : item.endBalance.toFixed(2)
+                  }}
+                  {{ item.product.unit }}
+                </td>
               </tr>
             </tbody>
           </template>
@@ -101,6 +133,7 @@
 </template>
 
 <script>
+import qs from "querystring";
 import api from "@/plugins/api";
 import moment from "moment";
 export default {
@@ -109,20 +142,16 @@ export default {
     return {
       filtersExtended: true,
       dateRangeMenu: false,
+      searchTerm: "",
       dateRange: [
-        moment
-          .utc()
-          .subtract("1", "month")
-          .format("YYYY-MM-DD"),
-        moment
-          .utc()
-          .endOf("day")
-          .format("YYYY-MM-DD"),
+        moment.utc().subtract("1", "month").format("YYYY-MM-DD"),
+        moment.utc().endOf("day").format("YYYY-MM-DD"),
       ],
       stock: "",
       residues: [],
       headers: [
-        { text: "Артикул", value: "title" },
+        { text: "Код", value: "code" },
+        { text: "Название", value: "title" },
         { text: "Категория", value: "category.title" },
         { text: "Остаток на начало", value: "startBalance" },
         { text: "Приход", value: "income" },
@@ -139,23 +168,29 @@ export default {
       return dates.join(" ~ ");
     },
     stocks() {
-      return this.$store.state.ERP.stocks.items;
+      return this.$store.state.STOCKS.stocks.items;
     },
   },
   watch: {
     stock(newVal, oldVal) {
-      this.fetchResidues();
+      // this.fetchResidues();
     },
     dateRange(newVal) {
-      if (this.stock) this.fetchResidues();
+      // if (this.stock) this.fetchResidues();
     },
   },
   methods: {
     async fetchResidues() {
+      const query = {
+        stock: this.stock,
+        start: this.dateRange[0],
+        end: this.dateRange[1] || this.dateRange[0],
+      };
+      if (this.searchTerm.length > 0) {
+        query.code = this.searchTerm;
+      }
       const { data } = await api.get(
-        `/api/transactions/residue?stock=${this.stock}&start=${
-          this.dateRange[0]
-        }&end=${this.dateRange[1] || this.dateRange[0]}`
+        `/api/transactions/residue?${qs.stringify(query)}`
       );
       this.residues = data;
       console.log(data);

@@ -1,4 +1,4 @@
-const ACCESS_TOKEN = 'access_token';
+const ACCESS_TOKEN = "access_token";
 
 export const getToken = () => {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -11,16 +11,32 @@ export const removeToken = () => {
 };
 
 export const parseJwt = (token) => {
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   var jsonPayload = decodeURIComponent(
     atob(base64)
-      .split('')
+      .split("")
       .map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
       })
-      .join('')
+      .join("")
   );
 
   return JSON.parse(jsonPayload);
+};
+
+export const isAuthenticated = () => {
+  const token = getToken();
+  if (token) {
+    const { exp } = parseJwt(token);
+    let current = (new Date().getTime() + 1) / 1000;
+    if (exp > current) {
+      return true;
+    } else {
+      removeToken();
+      // remove auth header
+      return false;
+    }
+  }
+  return false;
 };

@@ -1,8 +1,12 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
 
-import ERP from '@/store/erp';
-import AUTH from '@/store/auth';
+import APP from "@/store/app";
+import AUTH from "@/store/auth";
+import PRODUCTS from "@/store/products";
+import CATEGORIES from "@/store/categories";
+import STOCKS from "@/store/stocks";
+import WAYBILLS from "@/store/waybills";
 
 Vue.use(Vuex);
 
@@ -11,7 +15,11 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   modules: {
-    ERP,
+    APP,
     AUTH,
+    PRODUCTS,
+    CATEGORIES,
+    STOCKS,
+    WAYBILLS,
   },
 });

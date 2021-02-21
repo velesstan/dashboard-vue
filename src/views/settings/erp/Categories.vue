@@ -16,7 +16,13 @@
             <v-dialog persistent v-model="crudDialog" max-width="500px">
               <v-card>
                 <v-toolbar dark elevation="0" color="primary">
-                  <span>{{`${crudMode === 'create' ? 'Добавить категорию' : 'Редактировать'}`}}</span>
+                  <span>{{
+                    `${
+                      crudMode === "create"
+                        ? "Добавить категорию"
+                        : "Редактировать"
+                    }`
+                  }}</span>
                   <v-spacer />
                   <v-btn icon @click="closeCrudDialog()">
                     <v-icon>mdi-close</v-icon>
@@ -37,11 +43,10 @@
                           />
                         </v-col>
                         <v-col cols="12">
-                          <v-select
-                            v-model="editedItem.unit"
-                            :items="units"
-                            :rules="unitRules"
-                            label="Единица измерения"
+                          <v-text-field
+                            type="number"
+                            v-model="editedItem.sortPriority"
+                            label="Приоритет"
                           />
                         </v-col>
                       </v-row>
@@ -54,23 +59,34 @@
                     @click="$refs.form.validate() && save()"
                     text
                     color="green"
-                  >{{`${crudMode === 'create' ? 'Создать': 'Обновить'}`}}</v-btn>
+                    >{{
+                      `${crudMode === "create" ? "Создать" : "Обновить"}`
+                    }}</v-btn
+                  >
                 </v-card-actions>
               </v-card>
             </v-dialog>
             <v-btn icon class="ml-3" @click="refresh">
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
+            <v-btn icon class="ml-3" @click="exportCategories()">
+              <v-icon>mdi-download</v-icon>
+            </v-btn>
           </v-toolbar>
           <v-card-text>
-            <v-data-table :search="search" :headers="headers" :items="items">
-              <template v-slot:body="{items}">
+            <v-data-table
+              :loading="tableLoading"
+              :search="search"
+              :headers="headers"
+              :items="items"
+            >
+              <template v-slot:body="{ items }">
                 <tbody>
                   <tr v-for="item in items" :key="item._id">
-                    <td>{{item.title}}</td>
-                    <td>{{item.unit}}</td>
-                    <td>{{item.createdAt | moment('HH:mm DD/MM/YYYY')}}</td>
-                    <td>{{item.updatedAt | moment('HH:mm DD/MM/YYYY')}}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.sortPriority }}</td>
+                    <td>{{ item.createdAt | moment("HH:mm DD/MM/YYYY") }}</td>
+                    <td>{{ item.updatedAt | moment("HH:mm DD/MM/YYYY") }}</td>
                     <td class="text-right">
                       <v-btn icon small @click="openCrudDialog(item, 'update')">
                         <v-icon small>mdi-pencil</v-icon>
@@ -91,12 +107,13 @@
 </template>
 
 <script>
+import api from "@/plugins/api";
 import {
-  GET_CATEGORIES,
   CREATE_CATEGORY,
+  READ_CATEGORIES,
   UPDATE_CATEGORY,
-  REMOVE_CATEGORY
-} from "@/store/erp/action-types";
+  DELETE_CATEGORY,
+} from "@/store/categories/action-types";
 export default {
   name: "Categories",
   data() {
@@ -108,52 +125,47 @@ export default {
       editedItem: {
         _id: "",
         title: "",
-        unit: ""
+        sortPriority: "",
       },
       defaultItem: {
         title: "",
-        unit: ""
+        sortPriority: "1000",
       },
       headers: [
         {
           text: "Название",
           align: "start",
-          value: "title"
+          value: "title",
         },
         {
-          text: "СИ",
-          value: "unit"
+          text: "Приоритет",
+          align: "start",
+          value: "sortPriority",
         },
         {
           text: "Создано",
-          value: "createdAt"
+          value: "createdAt",
         },
         {
           text: "Обновлено",
-          value: "updatedAt"
+          value: "updatedAt",
         },
-        { text: "Действия", align: "end" }
-      ],
-      units: [
-        { text: "шт" },
-        { text: "л" },
-        { text: "кг" },
-        { text: "м" },
-        { text: "м²" },
-        { text: "м³" }
+        { text: "Действия", align: "end", sortable: false },
       ],
       categoryRules: [
-        v => !!v || "Это поле необходимо",
-        v => (v && v.length >= 4) || "Минимум 4 символа",
-        v => (v && v.length <= 15) || "Максимум 15 символов"
+        (v) => !!v || "Это поле необходимо",
+        (v) => (v && v.length >= 4) || "Минимум 4 символа",
+        (v) => (v && v.length <= 15) || "Максимум 15 символов",
       ],
-      unitRules: [v => !!v || "Это поле необходимо"]
     };
   },
   computed: {
     items() {
-      return this.$store.state.ERP.categories.items;
-    }
+      return this.$store.state.CATEGORIES.categories.items;
+    },
+    tableLoading() {
+      return this.$store.state.CATEGORIES.categories.table.loading;
+    },
   },
   methods: {
     openCrudDialog(item = this.defaultItem, mode = "create") {
@@ -168,6 +180,12 @@ export default {
       this.crudDialog = false;
       this.editedItem = Object.assign({}, this.defaultItem);
     },
+    async exportCategories() {
+      const { data } = await api.get(`/api/export/categories/`, {
+        responseType: "arraybuffer",
+      });
+      saveAs(new Blob([data]), "Продукция.xlsx");
+    },
     async save() {
       if (this.crudMode === "create") {
         this.$store.dispatch(CREATE_CATEGORY, this.editedItem);
@@ -178,11 +196,11 @@ export default {
       this.closeCrudDialog();
     },
     async remove(item) {
-      this.$store.dispatch(REMOVE_CATEGORY, item._id);
+      this.$store.dispatch(DELETE_CATEGORY, item._id);
     },
     refresh() {
-      this.$store.dispatch(GET_CATEGORIES);
-    }
-  }
+      this.$store.dispatch(READ_CATEGORIES, {});
+    },
+  },
 };
 </script>

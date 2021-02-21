@@ -36,16 +36,6 @@
                             label="Название"
                           />
                         </v-col>
-                        <v-col cols="12">
-                          <v-text-field
-                            v-model="editedItem.waybillPrefix"
-                            :rules="waybillPrefixRules"
-                            :counter="10"
-                            validate-on-blur
-                            error-count="2"
-                            label="Префикс накладной"
-                          />
-                        </v-col>
                       </v-row>
                     </v-form>
                   </v-container>
@@ -110,22 +100,15 @@ export default {
       editedItem: {
         _id: "",
         title: "",
-        waybillPrefix: ""
       },
       defaultItem: {
         title: "",
-        waybillPrefix: ""
       },
       headers: [
         {
           text: "Название",
           align: "start",
           value: "title"
-        },
-        {
-          text: "Префикс накладной",
-          align: "start",
-          value: "waybillPrefix"
         },
         {
           text: "Создано",
@@ -136,10 +119,6 @@ export default {
           value: "updatedAt"
         },
         { text: "Действия", align: "end" }
-      ],
-      waybillPrefixRules: [
-        v => !!v || "Это поле необходимо",
-        v => (v && v.length <= 10) || "Максимум 10 символов"
       ],
       nameRules: [
         v => !!v || "Это поле необходимо",

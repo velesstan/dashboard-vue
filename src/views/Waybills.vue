@@ -141,14 +141,8 @@
                         <v-form ref="itemsForm" lazy-validation>
                           <v-row>
                             <v-col>
-                              <v-autocomplete
-                                :items="products"
-                                return-object
+                              <ProductAutocomplete
                                 v-model="itemToAdd.product"
-                                :rules="addItemProductRules"
-                                item-text="code"
-                                item-value="_id"
-                                placeholder="Выбрать"
                               />
                             </v-col>
                             <v-col cols="auto">
@@ -256,6 +250,9 @@
                   <v-chip-group>
                     <v-chip>
                       {{ item.createdAt | moment("HH:mm DD/MM/YY") }}
+                    </v-chip>
+                    <v-chip>
+                      {{ item.user.lastName }} {{ item.user.firstName }}
                     </v-chip>
                     <v-chip>
                       {{ item.stock.title }}
@@ -384,12 +381,16 @@ import { ajax } from "rxjs/ajax";
 import moment from "moment";
 import { saveAs } from "file-saver";
 import qs from "querystring";
+import ProductAutocomplete from "@/components/ProductAutocomplete";
 import { READ_WAYBILLS } from "@/store/waybills/action-types";
 import { READ_WAYBILLS_SUCCESS } from "@/store/waybills/mutation-types";
 import api, { API_URL } from "@/plugins/api";
 import waybillTypes from "./waybilltypes.js";
 export default {
   name: "Waybills",
+  components: {
+    ProductAutocomplete,
+  },
   data() {
     return {
       searchTerm$: new BehaviorSubject(""),

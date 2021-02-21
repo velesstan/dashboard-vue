@@ -4,7 +4,9 @@
       <v-list-item two-line>
         <v-list-item-avatar>
           <v-avatar color="primary" size="64">
-            <span class="white--text headline">НК</span>
+            <span class="white--text headline">{{
+              `${user.firstName[0]}${user.lastName[0]}`
+            }}</span>
           </v-avatar>
         </v-list-item-avatar>
         <v-list-item-content>

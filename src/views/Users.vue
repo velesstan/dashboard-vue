@@ -20,7 +20,7 @@
                   <v-card-text>
                     <v-form ref="form">
                       <v-row>
-                        <v-col cols="12">
+                        <v-col cols="6">
                           <v-text-field
                             v-model="editedItem.email"
                             prepend-icon="mdi-account"
@@ -28,12 +28,33 @@
                             label="Имя пользователя"
                           />
                         </v-col>
-                        <v-col cols="12">
+                        <v-col cols="6">
                           <v-text-field
                             v-model="editedItem.password"
                             prepend-icon="mdi-lock"
                             type="password"
                             label="Пароль"
+                          />
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                            v-model="editedItem.firstName"
+                            type="text"
+                            label="Имя"
+                          />
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                            v-model="editedItem.lastName"
+                            type="text"
+                            label="Фамилия"
+                          />
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                            v-model="editedItem.patronymic"
+                            type="text"
+                            label="Отчество"
                           />
                         </v-col>
                       </v-row>
@@ -60,6 +81,9 @@
             <tbody>
               <tr v-for="item in users" :key="item._id">
                 <td>{{ item.email }}</td>
+                <td>{{ item.lastName }}</td>
+                <td>{{ item.firstName }}</td>
+                <td>{{ item.patronymic }}</td>
                 <td></td>
                 <td>{{ item.updatedAt | moment("HH:mm DD/MM/YYYY") }}</td>
                 <td>{{ item.createdAt | moment("HH:mm DD/MM/YYYY") }}</td>
@@ -98,10 +122,16 @@ export default {
         _id: "",
         email: "",
         password: "",
+        patronymic: "",
+        firstName: "",
+        lastName: "",
       },
       defaultItem: {
         email: "",
         password: "",
+        patronymic: "",
+        firstName: "",
+        lastName: "",
       },
       headers: [
         {
@@ -109,7 +139,18 @@ export default {
           align: "start",
           value: "email",
         },
-
+        {
+          text: "Фамилия",
+          value: "lastName",
+        },
+        {
+          text: "Имя",
+          value: "firstName",
+        },
+        {
+          text: "Отчество",
+          value: "patronymic",
+        },
         {
           text: "Password",
           value: "password",

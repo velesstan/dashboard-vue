@@ -8,8 +8,10 @@
           </v-avatar>
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title>Наталья Калкутина</v-list-item-title>
-          <v-list-item-subtitle>Администратор</v-list-item-subtitle>
+          <v-list-item-title
+            >{{ user.firstName }} {{ user.lastName }}</v-list-item-title
+          >
+          <v-list-item-subtitle>Пользователь</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </template>
@@ -62,6 +64,11 @@
 <script>
 export default {
   name: "Sidenav",
+  computed: {
+    user() {
+      return this.$store.state.AUTH.user;
+    },
+  },
 };
 </script>
 

@@ -34,7 +34,6 @@ export const isAuthenticated = () => {
       return true;
     } else {
       removeToken();
-      // remove auth header
       return false;
     }
   }

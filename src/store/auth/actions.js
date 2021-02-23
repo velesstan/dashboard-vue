@@ -10,7 +10,10 @@ export default {
     const token = response.data.access_token;
     api.defaults.headers.common.Authorization = `Bearer ${token}`;
     setToken(token);
-    router.push("/dashboard");
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+
   },
   async [authActions.USER_LOGOUT]({ commit }) {
     removeToken();

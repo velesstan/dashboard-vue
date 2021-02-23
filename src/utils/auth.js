@@ -16,7 +16,7 @@ export const parseJwt = (token) => {
   var jsonPayload = decodeURIComponent(
     atob(base64)
       .split("")
-      .map(function(c) {
+      .map(function (c) {
         return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
       })
       .join("")
@@ -28,14 +28,7 @@ export const parseJwt = (token) => {
 export const isAuthenticated = () => {
   const token = getToken();
   if (token) {
-    const { exp } = parseJwt(token);
-    let current = (new Date().getTime() + 1) / 1000;
-    if (exp > current) {
-      return true;
-    } else {
-      removeToken();
-      return false;
-    }
+    return true
   }
   return false;
 };

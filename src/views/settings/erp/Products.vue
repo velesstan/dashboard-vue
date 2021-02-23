@@ -59,7 +59,7 @@
                                   <v-text-field
                                     v-model="editedItem.code"
                                     :rules="codeRules"
-                                    :counter="10"
+                                    :counter="15"
                                     validate-on-blur
                                     error-count="3"
                                     label="Код"

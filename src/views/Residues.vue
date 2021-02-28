@@ -23,6 +23,12 @@
               />
             </v-col>
             <v-col cols="auto">
+              <v-btn
+                text
+                v-if="this.stock && this.category"
+                @click="downloadResidues"
+                >Скачать</v-btn
+              >
               <v-btn text @click="filtersExtended = !filtersExtended"
                 >Фильтры</v-btn
               >
@@ -76,6 +82,19 @@
                   item-value="_id"
                   :items="stocks"
                   v-model="stock"
+                  @change="fetchResidues()"
+                  prepend-icon="mdi-home-search"
+                ></v-select>
+              </v-col>
+              <v-col cols="auto">
+                <v-select
+                  label="Выбрать категорию"
+                  hide-details
+                  outlined
+                  item-text="title"
+                  item-value="_id"
+                  :items="categories"
+                  v-model="category"
                   @change="fetchResidues()"
                   prepend-icon="mdi-home-search"
                 ></v-select>
@@ -148,6 +167,7 @@ export default {
         moment.utc().endOf("day").format("YYYY-MM-DD"),
       ],
       stock: "",
+      category: "",
       residues: [],
       headers: [
         { text: "Код", value: "code" },
@@ -170,6 +190,9 @@ export default {
     stocks() {
       return this.$store.state.STOCKS.stocks.items;
     },
+    categories() {
+      return this.$store.state.CATEGORIES.categories.items;
+    },
   },
   watch: {
     stock(newVal, oldVal) {
@@ -180,9 +203,29 @@ export default {
     },
   },
   methods: {
+    async downloadResidues() {
+      const query = {
+        stock: this.stock,
+        start: this.dateRange[0],
+        end: this.dateRange[1] || this.dateRange[0],
+        category: this.category,
+      };
+      if (this.searchTerm.length > 0) {
+        query.code = this.searchTerm;
+      }
+      const { data } = await api.get(
+        `/api/export/residue?${qs.stringify(query)}`,
+        {
+          responseType: "arraybuffer",
+        }
+      );
+      const selectedStock = this.stocks.find((s) => s._id === this.stock);
+      saveAs(new Blob([data]), `Остатки-${selectedStock.title}.xlsx`);
+    },
     async fetchResidues() {
       const query = {
         stock: this.stock,
+        category: this.category,
         start: this.dateRange[0],
         end: this.dateRange[1] || this.dateRange[0],
       };
@@ -193,7 +236,6 @@ export default {
         `/api/transactions/residue?${qs.stringify(query)}`
       );
       this.residues = data;
-      console.log(data);
     },
   },
   mounted() {},
